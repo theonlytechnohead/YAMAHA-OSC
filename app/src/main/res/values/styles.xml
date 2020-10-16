@@ -1,11 +1,18 @@
 <resources>
 
-    <style name="Widget.Theme.YAMAHAOSC.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
+	<style name="Widget.Theme.YAMAHAOSC.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+		<item name="android:background">@color/black_overlay</item>
+	</style>
 
-    <style name="Widget.Theme.YAMAHAOSC.ButtonBar.Fullscreen" parent="">
-        <item name="android:background">@color/black_overlay</item>
-        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
-    </style>
+	<style name="Widget.Theme.YAMAHAOSC.ButtonBar.Fullscreen" parent="">
+		<item name="android:background">@color/black_overlay</item>
+		<item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+	</style>
+
+	<style name="Widget.Theme.YAMAHAOSC.MixButton" parent="">
+		<item name="android:textColor">@color/white</item>
+		<item name="android:textSize">25sp</item>
+		<item name="android:insetBottom">0dp</item>
+		<item name="android:insetTop">0dp</item>
+	</style>
 </resources>
