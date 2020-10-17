@@ -16,11 +16,10 @@
 	<color name="background">#B0000000</color>
 
 	<!-- Mix colours -->
-	<color name="mix_button">#64DD17</color>
-	<color name="mix1">#D50000</color>
-	<color name="mix2">#64DD17</color>
+	<color name="mix1">#F4511E</color>
+	<color name="mix2">#4CAF50</color>
 	<color name="mix3">#00B8D4</color>
-	<color name="mix4">#FFD600</color>
+	<color name="mix4">#D6C63A</color>
 	<color name="mix5">#9C27B0</color>
 	<color name="mix6">#FF6D00</color>
 </resources>
