@@ -114,6 +114,12 @@
 			app:vsb_thumb_container_corner_radius="5dp"
 			app:vsb_use_thumb_to_set_progress="true" />
 
+		<TextView
+			android:id="@+id/db_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="823"/>
+
 	</LinearLayout>
 
 
