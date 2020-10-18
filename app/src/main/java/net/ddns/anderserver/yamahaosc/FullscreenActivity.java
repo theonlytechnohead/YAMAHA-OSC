@@ -3,6 +3,7 @@ package net.ddns.anderserver.yamahaosc;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,7 +12,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.illposed.osc.OSCBadDataEvent;
+import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
+import com.illposed.osc.OSCPacket;
+import com.illposed.osc.OSCPacketEvent;
+import com.illposed.osc.OSCPacketListener;
 import com.illposed.osc.OSCSerializeException;
 import com.illposed.osc.transport.udp.OSCPortIn;
 import com.illposed.osc.transport.udp.OSCPortOut;
@@ -34,6 +40,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
 	private String oscIP = "192.168.1.50";
 	private int oscSendPort = 8000;
+	private int oscReceivePort = 9000;
 	OSCPortOut oscPortOut;
 	OSCPortIn oscPortIn;
 
@@ -57,6 +64,24 @@ public class FullscreenActivity extends AppCompatActivity {
 						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		// Fullscreen done!
+
+		try {
+			oscPortIn = new OSCPortIn(oscReceivePort);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		oscPortIn.addPacketListener(new OSCPacketListener() {
+			@Override
+			public void handlePacket (OSCPacketEvent event) {
+				OSCMessage message = (OSCMessage) event.getPacket();
+				Log.d("OSC Received", message.getAddress());
+			}
+
+			@Override
+			public void handleBadData (OSCBadDataEvent event) {
+
+			}
+		});
 
 		Button mix1_button = findViewById(R.id.mix1_button);
 		mix1_button.setOnClickListener(new View.OnClickListener() {
