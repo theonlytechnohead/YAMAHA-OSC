@@ -74,82 +74,136 @@
 
 	</LinearLayout>
 
-	<!-- The primary full-screen view. This can be replaced with whatever view
-		 is needed to present your content, e.g. VideoView, SurfaceView,
-		 TextureView, etc. -->
-	<TextView
-		android:id="@+id/fullscreen_content"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_weight="0"
-		android:gravity="center"
-		android:keepScreenOn="true"
-		android:text="@string/dummy_content"
-		android:textColor="?attr/fullscreenTextColor"
-		android:textSize="50sp"
-		android:textStyle="bold" />
-
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="9"
-		android:orientation="horizontal">
+		android:orientation="horizontal"
+		android:weightSum="2">
+
+		<FrameLayout
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1">
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader1"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader"/>
+		</FrameLayout>
+
+		<FrameLayout
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1">
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader2"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		</FrameLayout>
+
 
 		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader1"
-			android:layout_width="60dp"
+			android:id="@+id/fader3"
+			android:layout_width="45dp"
 			android:layout_height="match_parent"
-			app:vsb_max_value="1023"
 			app:vsb_progress="823"
-			app:layout_constraintLeft_toLeftOf="parent"
-			app:vsb_bar_background="#eeeeee"
-			app:vsb_bar_corner_radius="5dp"
-			app:vsb_bar_progress_gradient_end="@color/light_blue_600"
-			app:vsb_bar_progress_gradient_start="@color/teal_200"
-			app:vsb_bar_width="40dp"
-			app:vsb_click_to_set_progress="false"
-			app:vsb_max_placeholder_position="inside"
-			app:vsb_min_placeholder_position="inside"
-			app:vsb_show_thumb="true"
-			app:vsb_thumb_container_corner_radius="5dp"
-			app:vsb_use_thumb_to_set_progress="true" />
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
 
-		<TextView
-			android:id="@+id/db_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="823"/>
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader4"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader5"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader6"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader7"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader8"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader9"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader10"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader11"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader12"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader13"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader14"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader15"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader16"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
 
 	</LinearLayout>
-
-
-	<!-- This FrameLayout insets its children based on system windows using
-		 android:fitsSystemWindows. -->
-	<FrameLayout
-		android:layout_width="0dp"
-		android:layout_height="0dp"
-		android:visibility="gone"
-		android:fitsSystemWindows="true">
-
-		<LinearLayout
-			android:id="@+id/fullscreen_content_controls"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom|center_horizontal"
-			android:orientation="horizontal"
-			android:weightSum="6"
-			tools:ignore="UselessParent">
-
-			<Button
-				android:id="@+id/dummy_button"
-				style="?android:attr/buttonBarButtonStyle"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:text="@string/dummy_button"
-				android:visibility="gone" />
-
-		</LinearLayout>
-	</FrameLayout>
 
 </LinearLayout>

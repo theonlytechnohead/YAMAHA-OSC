@@ -67,7 +67,6 @@ public class FullscreenActivity extends AppCompatActivity {
 		});
 
 		VerticalSeekBar fader1 = findViewById(R.id.fader1);
-		fader1.setClickToSetProgress(true);
 		fader1.setOnProgressChangeListener(new Function1<Integer, Unit>() {
 			@Override
 			public Unit invoke(Integer integer) {
@@ -97,10 +96,6 @@ public class FullscreenActivity extends AppCompatActivity {
 				if (oscPortOut != null) {
 					ArrayList<Object> arguments = new ArrayList<>();
 					arguments.add(faderValue);
-					handler.post(() -> {
-						TextView textView = findViewById(R.id.db_text);
-						textView.setText(Integer.toString(faderValue));
-					});
 					OSCMessage message = new OSCMessage("/mix1/fader1", arguments);
 
 					try {
