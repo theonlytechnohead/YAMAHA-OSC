@@ -38,7 +38,7 @@ import static java.lang.Thread.sleep;
  */
 public class FullscreenActivity extends AppCompatActivity {
 
-	private String oscIP = "192.168.1.50";
+	private String oscIP = "127.0.0.1";
 	private int oscSendPort = 8000;
 	private int oscReceivePort = 9000;
 	OSCPortOut oscPortOut;
@@ -70,18 +70,30 @@ public class FullscreenActivity extends AppCompatActivity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		oscPortIn.addPacketListener(new OSCPacketListener() {
-			@Override
-			public void handlePacket (OSCPacketEvent event) {
-				OSCMessage message = (OSCMessage) event.getPacket();
-				Log.d("OSC Received", message.getAddress());
-			}
+		while(true) {
+			if (oscPortIn != null) {
+				oscPortIn.addPacketListener(new OSCPacketListener() {
+					@Override
+					public void handlePacket (OSCPacketEvent event) {
+						OSCMessage message = (OSCMessage) event.getPacket();
+						Log.d("OSC Received", message.getAddress());
+					}
 
-			@Override
-			public void handleBadData (OSCBadDataEvent event) {
+					@Override
+					public void handleBadData (OSCBadDataEvent event) {
 
+					}
+				});
+				break;
+			} else {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					break;
+				}
 			}
-		});
+		}
 
 		Button mix1_button = findViewById(R.id.mix1_button);
 		mix1_button.setOnClickListener(new View.OnClickListener() {
