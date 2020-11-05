@@ -30,7 +30,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="MIX 1"/>
+			android:text="MIX 1"
+			tools:ignore="NestedWeights" />
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
@@ -78,13 +79,11 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="9"
-		android:orientation="horizontal"
-		android:weightSum="2">
+		android:orientation="horizontal">
 
 		<FrameLayout
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1">
+			android:layout_width="45dp"
+			android:layout_height="match_parent">
 			<com.lukelorusso.verticalseekbar.VerticalSeekBar
 				android:id="@+id/fader1"
 				android:layout_width="match_parent"
@@ -94,9 +93,8 @@
 		</FrameLayout>
 
 		<FrameLayout
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1">
+			android:layout_width="45dp"
+			android:layout_height="match_parent">
 			<com.lukelorusso.verticalseekbar.VerticalSeekBar
 				android:id="@+id/fader2"
 				android:layout_width="match_parent"

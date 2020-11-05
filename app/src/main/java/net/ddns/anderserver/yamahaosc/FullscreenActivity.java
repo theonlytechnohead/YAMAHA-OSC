@@ -1,5 +1,6 @@
 package net.ddns.anderserver.yamahaosc;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,17 +16,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.illposed.osc.OSCBadDataEvent;
 import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
+import com.illposed.osc.OSCMessageEvent;
+import com.illposed.osc.OSCMessageListener;
 import com.illposed.osc.OSCPacket;
 import com.illposed.osc.OSCPacketEvent;
 import com.illposed.osc.OSCPacketListener;
 import com.illposed.osc.OSCSerializeException;
+import com.illposed.osc.OSCSerializer;
+import com.illposed.osc.OSCSerializerAndParserBuilder;
+import com.illposed.osc.argument.handler.ColorArgumentHandler;
 import com.illposed.osc.transport.udp.OSCPortIn;
 import com.illposed.osc.transport.udp.OSCPortOut;
 import com.lukelorusso.verticalseekbar.VerticalSeekBar;
 
+import org.apache.log4j.BasicConfigurator;
+
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
+import java.util.List;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -38,15 +49,49 @@ import static java.lang.Thread.sleep;
  */
 public class FullscreenActivity extends AppCompatActivity {
 
-	private String oscIP = "127.0.0.1";
-	private int oscSendPort = 8000;
-	private int oscReceivePort = 9000;
+	private final String oscIP = "192.168.1.50";
+	private final int oscReceivePort = 9001;
+	SocketAddress socketAddress = new InetSocketAddress("192.168.1.160", oscReceivePort) ;
+	private final int oscSendPort = 8001;
 	OSCPortOut oscPortOut;
 	OSCPortIn oscPortIn;
+
+	ArrayList<VerticalSeekBar> faders = new ArrayList<>();
+
+	OSCPacketListener packetListener = new OSCPacketListener() {
+		@Override
+		public void handlePacket(OSCPacketEvent event) {
+			OSCPacket packet = event.getPacket();
+			if (packet instanceof OSCMessage) {
+				OSCMessage message = (OSCMessage) packet;
+				if (message.getAddress().contains("/mix1/fader")) {
+					String[] segments = message.getAddress().split("/");
+					int faderIndex = Integer.parseInt(segments[2].replaceAll("\\D+","")) - 1;
+					if (0 <= faderIndex && faderIndex < 16) {
+						VerticalSeekBar fader = faders.get(faderIndex);
+						fader.setOnProgressChangeListener((level) -> null);
+						fader.setProgress((int)message.getArguments().get(0));
+						fader.setOnProgressChangeListener((level) -> faderProgressChangeListener(fader, level));
+					}
+				}
+			}
+			if (packet instanceof OSCBundle) {
+				OSCBundle bundle = (OSCBundle) packet;
+				Log.i("OSC message", "Got a bundle!");
+			}
+		}
+
+		@Override
+		public void handleBadData(OSCBadDataEvent event) {
+			Log.d("OSC message", "Bad packet received");
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		//BasicConfigurator.configure();
 
 		setContentView(R.layout.activity_fullscreen);
 
@@ -65,80 +110,123 @@ public class FullscreenActivity extends AppCompatActivity {
 						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		// Fullscreen done!
 
-		try {
-			oscPortIn = new OSCPortIn(oscReceivePort);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		while(true) {
-			if (oscPortIn != null) {
-				oscPortIn.addPacketListener(new OSCPacketListener() {
-					@Override
-					public void handlePacket (OSCPacketEvent event) {
-						OSCMessage message = (OSCMessage) event.getPacket();
-						Log.d("OSC Received", message.getAddress());
-					}
+		AsyncTask.execute(() -> {
+			Handler handler = new Handler(Looper.getMainLooper());
+			SocketAddress sendSocket = new InetSocketAddress(oscIP, oscSendPort);
+			try {
+				oscPortOut = new OSCPortOut(sendSocket);
+			} catch(Exception e) {
+				handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
+				return;
+			}
 
-					@Override
-					public void handleBadData (OSCBadDataEvent event) {
 
-					}
-				});
-				break;
-			} else {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			try {
+				oscPortIn = new OSCPortIn(socketAddress);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			while(true) {
+				Log.i("Loop", "Looped");
+				if (oscPortIn != null) {
+					oscPortIn.getDispatcher().setAlwaysDispatchingImmediately(true);
+					oscPortIn.addPacketListener(packetListener);
 					break;
+				} else {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+						break;
+					}
 				}
 			}
-		}
+			oscPortIn.startListening();
 
-		Button mix1_button = findViewById(R.id.mix1_button);
-		mix1_button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// idk implement later
-			}
+			Button mix1_button = findViewById(R.id.mix1_button);
+			mix1_button.setOnClickListener(v -> {
+				SendOSCGetMix(1);
+			});
 		});
 
-		VerticalSeekBar fader1 = findViewById(R.id.fader1);
-		fader1.setOnProgressChangeListener(new Function1<Integer, Unit>() {
-			@Override
-			public Unit invoke(Integer integer) {
-				try {
-					SendOSCFaderValue(integer);
-				} catch (IOException | OSCSerializeException e) {
-					e.printStackTrace();
-				}
-				return null;
-			}
-		});
+		AsyncTask.execute(this::setupFaders);
 	}
 
-	public void SendOSCFaderValue(int faderValue) throws IOException, OSCSerializeException {
+	public void setupFaders () {
+		faders.add(findViewById(R.id.fader1));
+		faders.add(findViewById(R.id.fader2));
+		faders.add(findViewById(R.id.fader3));
+		faders.add(findViewById(R.id.fader4));
+		faders.add(findViewById(R.id.fader5));
+		faders.add(findViewById(R.id.fader6));
+		faders.add(findViewById(R.id.fader7));
+		faders.add(findViewById(R.id.fader8));
+		faders.add(findViewById(R.id.fader9));
+		faders.add(findViewById(R.id.fader10));
+		faders.add(findViewById(R.id.fader11));
+		faders.add(findViewById(R.id.fader12));
+		faders.add(findViewById(R.id.fader13));
+		faders.add(findViewById(R.id.fader14));
+		faders.add(findViewById(R.id.fader15));
+		faders.add(findViewById(R.id.fader16));
+
+
+		for (VerticalSeekBar fader :
+				faders) {
+			fader.setOnProgressChangeListener(level -> faderProgressChangeListener(fader, level));
+		}
+	}
+
+	Unit faderProgressChangeListener (VerticalSeekBar fader, int level) {
+		try {
+			SendOSCFaderValue(faders.indexOf(fader) + 1, level);
+		} catch (OSCSerializeException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void SendOSCFaderValue(int fader, int faderValue) throws OSCSerializeException {
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				Handler handler = new Handler(Looper.getMainLooper());
 
-				try {
-					oscPortOut = new OSCPortOut(InetAddress.getByName(oscIP), oscSendPort);
-				} catch(Exception e) {
-					handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
-					return;
-				}
-
 				if (oscPortOut != null) {
 					ArrayList<Object> arguments = new ArrayList<>();
 					arguments.add(faderValue);
-					OSCMessage message = new OSCMessage("/mix1/fader1", arguments);
+					OSCMessage message = new OSCMessage("/mix1/fader" + fader, arguments);
 
 					try {
 						oscPortOut.send(message);
+						Thread.sleep(5);
+						//Log.i("OSC message", message.getAddress() + " : " + message.getArguments().get(0).toString());
 					} catch (Exception e) {
-						// Error handling for some error
+						handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
+					}
+				}
+			}
+		});
+		t.start();
+	}
+
+	public void SendOSCGetMix(int mix) {
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Handler handler = new Handler(Looper.getMainLooper());
+
+				if (oscPortOut != null) {
+					ArrayList<Object> arguments = new ArrayList<>();
+					arguments.add(1);
+					OSCMessage message = new OSCMessage("/mix" + mix, arguments);
+
+					try {
+						oscPortOut.send(message);
+						//Log.i("OSC message", message.getAddress() + " : " + message.getArguments().get(0).toString());
+					} catch (Exception e) {
+						handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
 					}
 				}
 			}
