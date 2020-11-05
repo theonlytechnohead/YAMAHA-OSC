@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "YAMAHA OSC"
+rootProject.name = "TouchFaders"

@@ -1,4 +1,4 @@
-package net.ddns.anderserver.yamahaosc;
+package net.ddns.anderserver.touchfadersapp;
 
 import android.os.Bundle;
 import android.view.View;

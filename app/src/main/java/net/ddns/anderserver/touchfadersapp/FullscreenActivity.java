@@ -1,4 +1,4 @@
-package net.ddns.anderserver.yamahaosc;
+package net.ddns.anderserver.touchfadersapp;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -16,30 +15,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.illposed.osc.OSCBadDataEvent;
 import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
-import com.illposed.osc.OSCMessageEvent;
-import com.illposed.osc.OSCMessageListener;
 import com.illposed.osc.OSCPacket;
 import com.illposed.osc.OSCPacketEvent;
 import com.illposed.osc.OSCPacketListener;
 import com.illposed.osc.OSCSerializeException;
-import com.illposed.osc.OSCSerializer;
-import com.illposed.osc.OSCSerializerAndParserBuilder;
-import com.illposed.osc.argument.handler.ColorArgumentHandler;
 import com.illposed.osc.transport.udp.OSCPortIn;
 import com.illposed.osc.transport.udp.OSCPortOut;
 import com.lukelorusso.verticalseekbar.VerticalSeekBar;
 
-import org.apache.log4j.BasicConfigurator;
-
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
-import java.util.List;
 
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 import static java.lang.Thread.sleep;
 
