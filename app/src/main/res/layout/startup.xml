@@ -8,21 +8,38 @@
     android:id="@+id/startupLayout">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/greetingsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello there!"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toTopOf="@+id/ipEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/ipEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="192.168.1.0"
+        android:textSize="25sp"
+        android:inputType="number"
+        android:digits="0123456789."
+        app:layout_constraintBottom_toTopOf="@+id/startButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/greetingsText"
+        android:autofillHints=""
+        android:imeOptions="actionGo"/>
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="START"
+        android:textSize="25sp"
+        android:layout_margin="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
