@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.DisplayCutout;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -29,8 +32,6 @@ import java.net.SocketAddress;
 import java.util.ArrayList;
 
 import kotlin.Unit;
-
-import static java.lang.Thread.sleep;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -84,21 +85,6 @@ public class FullscreenActivity extends AppCompatActivity {
 
 		setContentView(R.layout.activity_fullscreen);
 
-		// Making it fullscreen...
-		View frameLayout = findViewById(R.id.fullscreen_frame);
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.hide();
-		}
-		frameLayout.setSystemUiVisibility(
-				View.SYSTEM_UI_FLAG_LOW_PROFILE
-						| View.SYSTEM_UI_FLAG_FULLSCREEN
-						| View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-						| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-		// Fullscreen done!
-
 		AsyncTask.execute(() -> {
 			Handler handler = new Handler(Looper.getMainLooper());
 			SocketAddress sendSocket = new InetSocketAddress(oscIP, oscSendPort);
@@ -140,6 +126,40 @@ public class FullscreenActivity extends AppCompatActivity {
 		});
 
 		AsyncTask.execute(this::setupFaders);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// Making it fullscreen...
+		View frameLayout = findViewById(R.id.fullscreen_frame);
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.hide();
+		}
+		frameLayout.setSystemUiVisibility(
+				View.SYSTEM_UI_FLAG_LOW_PROFILE
+						| View.SYSTEM_UI_FLAG_FULLSCREEN
+						| View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+						| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+		// Fullscreen done!
+
+		frameLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+			@Override
+			public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+				DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+				LinearLayout faderLayout = findViewById(R.id.faderLayout);
+				ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) faderLayout.getLayoutParams();
+				if (cutout.getSafeInsetLeft() == layoutParams.leftMargin) return;
+				layoutParams.leftMargin = cutout.getSafeInsetLeft();
+				layoutParams.rightMargin = cutout.getSafeInsetRight();
+				Handler handler = new Handler(Looper.getMainLooper());
+				handler.post(() -> faderLayout.setLayoutParams(layoutParams));
+				//Log.i("CUTOUT", "safeLeft: " + cutout.getSafeInsetLeft() + "  safeRight: " + cutout.getSafeInsetRight());
+			}
+		});
 	}
 
 	public void setupFaders () {
