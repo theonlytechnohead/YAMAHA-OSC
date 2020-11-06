@@ -1,5 +1,6 @@
 package net.ddns.anderserver.touchfadersapp;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.illposed.osc.OSCBadDataEvent;
 import com.illposed.osc.OSCBundle;
@@ -39,13 +41,10 @@ import kotlin.Unit;
  */
 public class FullscreenActivity extends AppCompatActivity {
 
-	private final String oscIP = "192.168.1.50";
-	private final int oscReceivePort = 9001;
-	SocketAddress socketAddress = new InetSocketAddress("192.168.1.160", oscReceivePort) ;
-	private final int oscSendPort = 8001;
+	SharedPreferences sharedPreferences;
+
 	OSCPortOut oscPortOut;
 	OSCPortIn oscPortIn;
-
 	ArrayList<VerticalSeekBar> faders = new ArrayList<>();
 
 	OSCPacketListener packetListener = new OSCPacketListener() {
@@ -84,6 +83,13 @@ public class FullscreenActivity extends AppCompatActivity {
 		//BasicConfigurator.configure();
 
 		setContentView(R.layout.activity_fullscreen);
+
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		String oscIP = sharedPreferences.getString("ipAddress", "192.168.1.2");
+
+		int oscReceivePort = sharedPreferences.getInt("receivePort", 9001);
+		SocketAddress socketAddress = new InetSocketAddress("192.168.1.160", oscReceivePort) ;
+		int oscSendPort = sharedPreferences.getInt("sendPort", 8001);
 
 		AsyncTask.execute(() -> {
 			Handler handler = new Handler(Looper.getMainLooper());

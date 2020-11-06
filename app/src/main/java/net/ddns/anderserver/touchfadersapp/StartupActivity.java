@@ -2,9 +2,12 @@ package net.ddns.anderserver.touchfadersapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -14,8 +17,11 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 public class StartupActivity extends AppCompatActivity {
+
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +43,8 @@ public class StartupActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         // Fullscreen done!
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Button startButton = findViewById(R.id.startButton);
         startButton.setOnClickListener((view) -> startActivity(new Intent(this, FullscreenActivity.class)));
@@ -70,6 +78,7 @@ public class StartupActivity extends AppCompatActivity {
 
         };
          */
+        ipEditText.setText(sharedPreferences.getString("ipAddress", "192.168.1.2"));
         ipEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 View view = this.getCurrentFocus();
@@ -83,6 +92,21 @@ public class StartupActivity extends AppCompatActivity {
             }
             return false;
         });
+        ipEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                sharedPreferences.edit().putString("ipAddress", s.toString()).apply();
+            }
+        });
     }
 }
