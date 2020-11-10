@@ -75,134 +75,143 @@
 
 	</LinearLayout>
 
-	<LinearLayout
+	<HorizontalScrollView
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="9"
-		android:orientation="horizontal"
-		android:id="@+id/faderLayout">
+		android:id="@+id/faderScrollView">
 
-		<FrameLayout
-			android:layout_width="45dp"
-			android:layout_height="match_parent">
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader1"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader"/>
-		</FrameLayout>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="horizontal"
+			android:id="@+id/faderLayout">
 
-		<FrameLayout
-			android:layout_width="45dp"
-			android:layout_height="match_parent">
+			<FrameLayout
+				android:layout_width="45dp"
+				android:layout_height="match_parent">
+				<com.lukelorusso.verticalseekbar.VerticalSeekBar
+					android:id="@+id/fader1"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					app:vsb_progress="823"
+					style="@style/Widget.Theme.YAMAHAOSC.Fader"/>
+			</FrameLayout>
+
+			<FrameLayout
+				android:layout_width="45dp"
+				android:layout_height="match_parent">
+				<com.lukelorusso.verticalseekbar.VerticalSeekBar
+					android:id="@+id/fader2"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					app:vsb_progress="823"
+					style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+			</FrameLayout>
+
+
 			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader2"
-				android:layout_width="match_parent"
+				android:id="@+id/fader3"
+				android:layout_width="45dp"
 				android:layout_height="match_parent"
 				app:vsb_progress="823"
 				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-		</FrameLayout>
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader4"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader5"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader6"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader7"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader8"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader9"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader10"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader11"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader12"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader13"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader14"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader15"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader16"
+				android:layout_width="45dp"
+				android:layout_height="match_parent"
+				app:vsb_progress="823"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+
+		</LinearLayout>
+
+	</HorizontalScrollView>
 
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader3"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader4"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader5"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader6"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader7"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader8"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader9"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader10"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader11"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader12"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader13"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader14"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader15"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader16"
-			android:layout_width="45dp"
-			android:layout_height="match_parent"
-			app:vsb_progress="823"
-			style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-	</LinearLayout>
 
 </LinearLayout>

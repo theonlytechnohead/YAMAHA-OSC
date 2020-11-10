@@ -15,7 +15,7 @@
 		<item name="vsb_max_value">1023</item>
 		<item name="vsb_bar_corner_radius">5dp</item>
 		<item name="vsb_thumb_container_corner_radius">5dp</item>
-		<item name="vsb_click_to_set_progress">true</item>
+		<item name="vsb_click_to_set_progress">false</item> <!-- This one is debatable, doesn't work well with the HorizontalScrollView, revise later? -->
 		<item name="vsb_use_thumb_to_set_progress">true</item>
 		<item name="vsb_show_thumb">true</item>
 		<item name="vsb_min_placeholder_position">inside</item>

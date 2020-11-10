@@ -2,6 +2,7 @@ package net.ddns.anderserver.touchfadersapp;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,9 +30,14 @@ import com.illposed.osc.transport.udp.OSCPortOut;
 import com.lukelorusso.verticalseekbar.VerticalSeekBar;
 
 import java.io.IOException;
+import java.net.BindException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.net.SocketAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import kotlin.Unit;
 
@@ -87,12 +93,27 @@ public class FullscreenActivity extends AppCompatActivity {
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		String oscIP = sharedPreferences.getString("ipAddress", "192.168.1.2");
 
-		int oscReceivePort = sharedPreferences.getInt("receivePort", 9001);
-		SocketAddress socketAddress = new InetSocketAddress("192.168.1.160", oscReceivePort) ;
-		int oscSendPort = sharedPreferences.getInt("sendPort", 8001);
 
 		AsyncTask.execute(() -> {
 			Handler handler = new Handler(Looper.getMainLooper());
+			String localAddress = "";
+			try {
+				for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+					NetworkInterface networkInterface = en.nextElement();
+					for (Enumeration<InetAddress> enumIpAddr = networkInterface.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+						InetAddress inetAddress = enumIpAddr.nextElement();
+						if (!inetAddress.isLinkLocalAddress()) {
+							localAddress = inetAddress.getHostAddress().toString();
+						}
+					}
+				}
+			} catch (SocketException e) {
+				e.printStackTrace();
+				return;
+			}
+			int oscReceivePort = sharedPreferences.getInt("receivePort", 9001);
+			SocketAddress receiveSocket = new InetSocketAddress(String.valueOf(localAddress), oscReceivePort);
+			int oscSendPort = sharedPreferences.getInt("sendPort", 8001);
 			SocketAddress sendSocket = new InetSocketAddress(oscIP, oscSendPort);
 			try {
 				oscPortOut = new OSCPortOut(sendSocket);
@@ -103,7 +124,9 @@ public class FullscreenActivity extends AppCompatActivity {
 
 
 			try {
-				oscPortIn = new OSCPortIn(socketAddress);
+				oscPortIn = new OSCPortIn(receiveSocket);
+			} catch (BindException e) {
+				handler.post(() -> Toast.makeText(getApplicationContext(), "Failed to bind IP to OSC!", Toast.LENGTH_SHORT).show());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -152,20 +175,23 @@ public class FullscreenActivity extends AppCompatActivity {
 						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		// Fullscreen done!
 
-		frameLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-			@Override
-			public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-				DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-				LinearLayout faderLayout = findViewById(R.id.faderLayout);
-				ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) faderLayout.getLayoutParams();
-				if (cutout.getSafeInsetLeft() == layoutParams.leftMargin) return;
-				layoutParams.leftMargin = cutout.getSafeInsetLeft();
-				layoutParams.rightMargin = cutout.getSafeInsetRight();
-				Handler handler = new Handler(Looper.getMainLooper());
-				handler.post(() -> faderLayout.setLayoutParams(layoutParams));
-				//Log.i("CUTOUT", "safeLeft: " + cutout.getSafeInsetLeft() + "  safeRight: " + cutout.getSafeInsetRight());
-			}
-		});
+
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+			frameLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+				@Override
+				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+					DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+					LinearLayout faderLayout = findViewById(R.id.faderLayout);
+					ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) faderLayout.getLayoutParams();
+					if (cutout.getSafeInsetLeft() == layoutParams.leftMargin) return;
+					layoutParams.leftMargin = cutout.getSafeInsetLeft();
+					layoutParams.rightMargin = cutout.getSafeInsetRight();
+					Handler handler = new Handler(Looper.getMainLooper());
+					handler.post(() -> faderLayout.setLayoutParams(layoutParams));
+					//Log.i("CUTOUT", "safeLeft: " + cutout.getSafeInsetLeft() + "  safeRight: " + cutout.getSafeInsetRight());
+				}
+			});
+		}
 	}
 
 	public void setupFaders () {

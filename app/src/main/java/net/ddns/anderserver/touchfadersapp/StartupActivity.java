@@ -3,6 +3,8 @@ package net.ddns.anderserver.touchfadersapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +15,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -46,8 +49,7 @@ public class StartupActivity extends AppCompatActivity {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Button startButton = findViewById(R.id.startButton);
-        startButton.setOnClickListener((view) -> startActivity(new Intent(this, FullscreenActivity.class)));
+        checkNetwork();
 
         EditText ipEditText = findViewById(R.id.ipEditText);
         /*
@@ -79,6 +81,7 @@ public class StartupActivity extends AppCompatActivity {
         };
          */
         ipEditText.setText(sharedPreferences.getString("ipAddress", "192.168.1.2"));
+        Button startButton = findViewById(R.id.startButton);
         ipEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 View view = this.getCurrentFocus();
@@ -108,5 +111,21 @@ public class StartupActivity extends AppCompatActivity {
                 sharedPreferences.edit().putString("ipAddress", s.toString()).apply();
             }
         });
+    }
+
+    void checkNetwork () {
+        Button startButton = findViewById(R.id.startButton);
+        if (isConnected(getApplicationContext())) {
+            startButton.setOnClickListener((view) -> startActivity(new Intent(this, FullscreenActivity.class)));
+        } else {
+            startButton.setOnClickListener((view) -> checkNetwork());
+            Toast.makeText(this, "You're not connected to a network!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static boolean isConnected (Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
     }
 }
