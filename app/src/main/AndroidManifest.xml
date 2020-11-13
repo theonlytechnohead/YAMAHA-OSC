@@ -29,11 +29,6 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.YAMAHAOSC.Fullscreen">
         </activity>
-        <activity android:name=".Mix1Activity"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.YAMAHAOSC.Fullscreen">
-
-        </activity>
     </application>
 
 </manifest>

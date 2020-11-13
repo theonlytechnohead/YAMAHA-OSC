@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">TouchFaders</string>
+	<string name="mix_1">MIX 1</string>
+	<string name="mix_2">MIX 2</string>
+	<string name="mix_3">MIX 3</string>
+	<string name="mix_4">MIX 4</string>
+	<string name="mix_5">MIX 5</string>
+	<string name="mix_6">MIX 6</string>
+	<string name="hint_ip">192.168.1.2</string>
+	<string name="start">START</string>
+	<string name="greeting_msg">Hello there!</string>
 </resources>

@@ -30,7 +30,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="MIX 1"
+			android:text="@string/mix_1"
 			tools:ignore="NestedWeights" />
 
 		<Button
@@ -39,7 +39,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="MIX 2"/>
+			android:text="@string/mix_2"/>
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
@@ -47,7 +47,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="MIX 3"/>
+			android:text="@string/mix_3"/>
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
@@ -55,7 +55,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="MIX 4"/>
+			android:text="@string/mix_4"/>
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
@@ -63,7 +63,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="MIX 5"/>
+			android:text="@string/mix_5"/>
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
@@ -71,7 +71,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="MIX 6"/>
+			android:text="@string/mix_6"/>
 
 	</LinearLayout>
 
