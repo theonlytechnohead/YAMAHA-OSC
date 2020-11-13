@@ -26,21 +26,21 @@
         android:textSize="25sp"
         android:inputType="number"
         android:digits="0123456789."
-        app:layout_constraintBottom_toTopOf="@+id/startButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/greetingsText"
         android:autofillHints=""
-        android:imeOptions="actionGo"/>
+        android:imeOptions="flagNoExtractUi|actionGo" />
 
     <Button
         android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10sp"
         android:text="@string/start"
         android:textSize="25sp"
-        android:layout_margin="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ipEditText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

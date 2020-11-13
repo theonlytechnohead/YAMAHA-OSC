@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.DisplayCutout;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 
 import com.illposed.osc.OSCBadDataEvent;
 import com.illposed.osc.OSCBundle;
@@ -41,6 +41,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -95,11 +96,11 @@ public class FullscreenActivity extends AppCompatActivity {
 
 		setContentView(R.layout.activity_fullscreen);
 
-		AsyncTask.execute(this::OpenOSCPortIn);
+		//AsyncTask.execute(this::OpenOSCPortIn);
 
-		AsyncTask.execute(this::OpenOSCPortOut);
+		//AsyncTask.execute(this::OpenOSCPortOut);
 
-		AsyncTask.execute(this::setupFaders);
+		//AsyncTask.execute(this::setupFaders);
 
 		Button mix1_button = findViewById(R.id.mix1_button);
 		mix1_button.setOnClickListener(v -> SendOSCGetMix(1));
@@ -161,6 +162,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
 	private void OpenOSCPortIn () {
 		Handler handler = new Handler(Looper.getMainLooper());
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		String localAddress = GetLocalIP();
 		int oscReceivePort = sharedPreferences.getInt("receivePort", 9001);
@@ -225,23 +227,25 @@ public class FullscreenActivity extends AppCompatActivity {
 		faders.add(findViewById(R.id.fader16));
 
 
-		for (VerticalSeekBar fader :
-				faders) {
-			fader.setOnProgressChangeListener(level -> faderProgressChangeListener(fader, level));
+		for (VerticalSeekBar fader : faders) {
+			//fader.setOnProgressChangeListener(level -> faderProgressChangeListener(fader, level));
+			fader.setOnProgressChangeListener(new Function1<Integer, Unit>() {
+				@Override
+				public Unit invoke (Integer integer) {
+					//SendOSCFaderValue(faders.indexOf(fader) + 1, integer);
+					return null;
+				}
+			});
 		}
 	}
 
 	Unit faderProgressChangeListener (VerticalSeekBar fader, int level) {
-		try {
-			SendOSCFaderValue(faders.indexOf(fader) + 1, level);
-		} catch (OSCSerializeException e) {
-			e.printStackTrace();
-		}
+		//SendOSCFaderValue(faders.indexOf(fader) + 1, level);
 		return null;
 	}
 
-	public void SendOSCFaderValue (int fader, int faderValue) throws OSCSerializeException {
-		Thread t = new Thread(() -> {
+	public void SendOSCFaderValue (int fader, int faderValue) {
+		AsyncTask.execute(() -> {
 			Handler handler = new Handler(Looper.getMainLooper());
 
 			if (oscPortOut != null) {
@@ -256,13 +260,14 @@ public class FullscreenActivity extends AppCompatActivity {
 				} catch (Exception e) {
 					handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
 				}
+			} else {
+				//OpenOSCPortOut();
 			}
 		});
-		t.start();
 	}
 
 	public void SendOSCGetMix (int mix) {
-		Thread t = new Thread(() -> {
+		AsyncTask.execute(() -> {
 			Handler handler = new Handler(Looper.getMainLooper());
 
 			if (oscPortOut != null) {
@@ -278,7 +283,6 @@ public class FullscreenActivity extends AppCompatActivity {
 				}
 			}
 		});
-		t.start();
 	}
 
 }
