@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "net.ddns.anderserver.touchfaders"
-        minSdkVersion 25
+        minSdkVersion 28
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"

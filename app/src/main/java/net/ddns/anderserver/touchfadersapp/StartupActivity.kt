@@ -18,10 +18,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-// Cool kotlin stuff below #noMoreFindViewByID
-import kotlinx.android.synthetic.main.startup.startupLayout
-import kotlinx.android.synthetic.main.startup.ipEditText
-import kotlinx.android.synthetic.main.startup.startButton
+import kotlinx.android.synthetic.main.startup.*
+
 
 class StartupActivity : AppCompatActivity() {
 
