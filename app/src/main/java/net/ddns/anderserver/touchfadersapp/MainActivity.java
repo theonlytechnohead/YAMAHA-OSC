@@ -24,7 +24,6 @@ import com.illposed.osc.OSCMessage;
 import com.illposed.osc.OSCPacket;
 import com.illposed.osc.OSCPacketEvent;
 import com.illposed.osc.OSCPacketListener;
-import com.illposed.osc.OSCSerializeException;
 import com.illposed.osc.transport.udp.OSCPortIn;
 import com.illposed.osc.transport.udp.OSCPortOut;
 import com.lukelorusso.verticalseekbar.VerticalSeekBar;
@@ -41,13 +40,12 @@ import java.util.Enumeration;
 import java.util.List;
 
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
 	SharedPreferences sharedPreferences;
 
@@ -94,7 +92,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
 		//BasicConfigurator.configure();
 
-		setContentView(R.layout.activity_fullscreen);
+		setContentView(R.layout.main);
 
 		AsyncTask.execute(this::OpenOSCPortIn);
 

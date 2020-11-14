@@ -10,12 +10,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.YAMAHAOSC">
+        android:theme="@style/Theme.TouchFaders">
         <activity android:name=".StartupActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.YAMAHAOSC.Fullscreen">
+            android:theme="@style/Theme.TouchFaders.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -23,11 +23,11 @@
         </activity>
 
         <activity
-            android:name=".FullscreenActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.YAMAHAOSC.Fullscreen">
+            android:theme="@style/Theme.TouchFaders.Fullscreen">
         </activity>
     </application>
 

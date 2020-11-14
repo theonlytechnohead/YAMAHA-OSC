@@ -96,7 +96,7 @@ class StartupActivity : AppCompatActivity() {
 
     private fun checkNetwork() {
         if (isConnected(applicationContext)) {
-            startButton.setOnClickListener { startActivity(Intent(this, FullscreenActivity::class.java)) }
+            startButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
         } else {
             startButton.setOnClickListener { checkNetwork() }
             Toast.makeText(this, "You're not connected to a network!", Toast.LENGTH_SHORT).show()

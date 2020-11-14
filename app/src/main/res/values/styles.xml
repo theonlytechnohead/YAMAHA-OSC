@@ -1,17 +1,17 @@
 <resources>
 
-	<style name="Widget.Theme.YAMAHAOSC.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+	<style name="Widget.Theme.TouchFaders.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
 		<item name="android:background">@color/black_overlay</item>
 	</style>
 
-	<style name="Widget.Theme.YAMAHAOSC.MixButton" parent="">
+	<style name="Widget.Theme.TouchFaders.MixButton" parent="">
 		<item name="android:textColor">@color/white</item>
 		<item name="android:textSize">25sp</item>
 		<item name="android:insetBottom">0dp</item>
 		<item name="android:insetTop">0dp</item>
 	</style>
 
-	<style name="Widget.Theme.YAMAHAOSC.Fader" parent="">
+	<style name="Widget.Theme.TouchFaders.Fader" parent="">
 		<item name="vsb_max_value">1023</item>
 		<item name="vsb_bar_corner_radius">5dp</item>
 		<item name="vsb_thumb_container_corner_radius">5dp</item>
