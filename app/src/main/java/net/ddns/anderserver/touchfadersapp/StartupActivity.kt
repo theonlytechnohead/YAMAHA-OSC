@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,12 +14,14 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+// Cool kotlin stuff below #noMoreFindViewByID
+import kotlinx.android.synthetic.main.startup.startupLayout
+import kotlinx.android.synthetic.main.startup.ipEditText
+import kotlinx.android.synthetic.main.startup.startButton
 
 class StartupActivity : AppCompatActivity() {
 
@@ -29,7 +32,6 @@ class StartupActivity : AppCompatActivity() {
         setContentView(R.layout.startup)
 
         // Making it fullscreen...
-        val startupLayout = findViewById<View>(R.id.startupLayout)
         val actionBar = supportActionBar
         actionBar?.hide()
         startupLayout.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
@@ -41,7 +43,6 @@ class StartupActivity : AppCompatActivity() {
         // Fullscreen done!
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         checkNetwork()
-        val ipEditText = findViewById<EditText>(R.id.ipEditText)
         /*
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter() {
@@ -71,7 +72,6 @@ class StartupActivity : AppCompatActivity() {
         };
          */
         ipEditText.setText(sharedPreferences?.getString("ipAddress", "192.168.1.2"))
-        val startButton = findViewById<Button>(R.id.startButton)
         ipEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 val view = this.currentFocus
@@ -95,7 +95,6 @@ class StartupActivity : AppCompatActivity() {
     }
 
     private fun checkNetwork() {
-        val startButton = findViewById<Button>(R.id.startButton)
         if (isConnected(applicationContext)) {
             startButton.setOnClickListener { startActivity(Intent(this, FullscreenActivity::class.java)) }
         } else {
@@ -106,9 +105,15 @@ class StartupActivity : AppCompatActivity() {
 
     companion object {
         fun isConnected(context: Context): Boolean {
-            val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo = cm.activeNetworkInfo
-            return networkInfo != null && networkInfo.isAvailable && networkInfo.isConnected
+            val connectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw = connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            return when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
         }
     }
 }

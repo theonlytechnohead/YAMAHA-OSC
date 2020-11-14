@@ -77,8 +77,8 @@ public class FullscreenActivity extends AppCompatActivity {
 				List<OSCPacket> packetList = bundle.getPackets();
 				for (OSCPacket pack : packetList) {
 					OSCMessage message = (OSCMessage) pack;
+					Log.i("OSC message", message.getAddress() + " : " + message.getArguments().get(0).toString());
 				}
-				Log.i("OSC bundle", "Got a bundle!");
 			}
 		}
 
