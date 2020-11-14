@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -9,209 +9,204 @@
 	android:background="?attr/fullscreenBackgroundColor"
 	android:theme="@style/ThemeOverlay.YAMAHAOSC.FullscreenContainer"
 	tools:context=".FullscreenActivity"
-	android:id="@+id/fullscreen_frame"
-	android:weightSum="10">
+	android:id="@+id/fullscreen_frame">
 
 	<LinearLayout
 		android:id="@+id/mixbutton_layout"
 		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		app:layout_constraintTop_toTopOf="parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:weightSum="6"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintLeft_toRightOf="parent"
-		android:orientation="horizontal"
-		android:layout_weight="1"
-		android:weightSum="6">
+		app:layout_constraintTop_toTopOf="parent">
 
 		<Button
-			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
-			android:backgroundTint="@color/mix1"
 			android:id="@+id/mix1_button"
+			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
+			android:backgroundTint="@color/mix1"
 			android:text="@string/mix_1"
 			tools:ignore="NestedWeights" />
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
 			android:backgroundTint="@color/mix2"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:text="@string/mix_2"/>
+			android:text="@string/mix_2" />
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
 			android:backgroundTint="@color/mix3"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:text="@string/mix_3"/>
+			android:text="@string/mix_3" />
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
 			android:backgroundTint="@color/mix4"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:text="@string/mix_4"/>
+			android:text="@string/mix_4" />
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
 			android:backgroundTint="@color/mix5"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:text="@string/mix_5"/>
+			android:text="@string/mix_5" />
 
 		<Button
 			style="@style/Widget.Theme.YAMAHAOSC.MixButton"
-			android:backgroundTint="@color/mix6"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="@string/mix_6"/>
+			android:backgroundTint="@color/mix6"
+			android:text="@string/mix_6" />
 
 	</LinearLayout>
 
-	<HorizontalScrollView
-		android:layout_width="match_parent"
+
+	<LinearLayout
+		android:id="@+id/faderLayout"
+		android:layout_width="0dp"
 		android:layout_height="0dp"
-		android:layout_weight="9"
-		android:id="@+id/faderScrollView">
+		android:orientation="horizontal"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/mixbutton_layout">
 
-		<LinearLayout
-			android:layout_width="wrap_content"
+		<FrameLayout
+			android:layout_width="45dp"
+			android:layout_height="match_parent">
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader1"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:vsb_progress="823" />
+		</FrameLayout>
+
+		<FrameLayout
+			android:layout_width="45dp"
+			android:layout_height="match_parent">
+
+			<com.lukelorusso.verticalseekbar.VerticalSeekBar
+				android:id="@+id/fader2"
+				style="@style/Widget.Theme.YAMAHAOSC.Fader"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:vsb_progress="823" />
+		</FrameLayout>
+
+
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader3"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
 			android:layout_height="match_parent"
-			android:orientation="horizontal"
-			android:id="@+id/faderLayout">
+			app:vsb_progress="823" />
 
-			<FrameLayout
-				android:layout_width="45dp"
-				android:layout_height="match_parent">
-				<com.lukelorusso.verticalseekbar.VerticalSeekBar
-					android:id="@+id/fader1"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					app:vsb_progress="823"
-					style="@style/Widget.Theme.YAMAHAOSC.Fader"/>
-			</FrameLayout>
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader4"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<FrameLayout
-				android:layout_width="45dp"
-				android:layout_height="match_parent">
-				<com.lukelorusso.verticalseekbar.VerticalSeekBar
-					android:id="@+id/fader2"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					app:vsb_progress="823"
-					style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-			</FrameLayout>
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader5"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader6"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader3"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader7"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader4"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader8"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader5"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader9"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader6"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader10"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader7"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader11"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader8"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader12"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader9"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader13"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader10"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader14"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader11"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader15"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader12"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+		<com.lukelorusso.verticalseekbar.VerticalSeekBar
+			android:id="@+id/fader16"
+			style="@style/Widget.Theme.YAMAHAOSC.Fader"
+			android:layout_width="45dp"
+			android:layout_height="match_parent"
+			app:vsb_progress="823" />
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader13"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
+	</LinearLayout>
 
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader14"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader15"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-			<com.lukelorusso.verticalseekbar.VerticalSeekBar
-				android:id="@+id/fader16"
-				android:layout_width="45dp"
-				android:layout_height="match_parent"
-				app:vsb_progress="823"
-				style="@style/Widget.Theme.YAMAHAOSC.Fader" />
-
-		</LinearLayout>
-
-	</HorizontalScrollView>
-
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

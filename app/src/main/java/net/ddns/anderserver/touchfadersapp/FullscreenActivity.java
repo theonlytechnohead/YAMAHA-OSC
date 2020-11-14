@@ -96,11 +96,11 @@ public class FullscreenActivity extends AppCompatActivity {
 
 		setContentView(R.layout.activity_fullscreen);
 
-		//AsyncTask.execute(this::OpenOSCPortIn);
+		AsyncTask.execute(this::OpenOSCPortIn);
 
-		//AsyncTask.execute(this::OpenOSCPortOut);
+		AsyncTask.execute(this::OpenOSCPortOut);
 
-		//AsyncTask.execute(this::setupFaders);
+		AsyncTask.execute(this::setupFaders);
 
 		Button mix1_button = findViewById(R.id.mix1_button);
 		mix1_button.setOnClickListener(v -> SendOSCGetMix(1));
@@ -123,7 +123,6 @@ public class FullscreenActivity extends AppCompatActivity {
 						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		// Fullscreen done!
-
 
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
 			frameLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -228,19 +227,12 @@ public class FullscreenActivity extends AppCompatActivity {
 
 
 		for (VerticalSeekBar fader : faders) {
-			//fader.setOnProgressChangeListener(level -> faderProgressChangeListener(fader, level));
-			fader.setOnProgressChangeListener(new Function1<Integer, Unit>() {
-				@Override
-				public Unit invoke (Integer integer) {
-					//SendOSCFaderValue(faders.indexOf(fader) + 1, integer);
-					return null;
-				}
-			});
+			fader.setOnProgressChangeListener(level -> faderProgressChangeListener(fader, level));
 		}
 	}
 
 	Unit faderProgressChangeListener (VerticalSeekBar fader, int level) {
-		//SendOSCFaderValue(faders.indexOf(fader) + 1, level);
+		SendOSCFaderValue(faders.indexOf(fader) + 1, level);
 		return null;
 	}
 
@@ -260,8 +252,6 @@ public class FullscreenActivity extends AppCompatActivity {
 				} catch (Exception e) {
 					handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
 				}
-			} else {
-				//OpenOSCPortOut();
 			}
 		});
 	}
