@@ -32,15 +32,14 @@ android {
 
 dependencies {
 
-    //implementation 'com.lukelorusso:verticalseekbar:1.2.3'
     //implementation 'com.github.alpbak:BoxedVerticalSeekBar:1.1.1'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.10'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.20'
     implementation 'com.illposed.osc:javaosc-core:0.7'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
 	implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'junit:junit:4.12'
+    implementation 'junit:junit:4.13.1'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

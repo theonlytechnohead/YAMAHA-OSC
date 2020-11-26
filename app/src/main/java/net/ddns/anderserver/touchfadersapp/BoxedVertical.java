@@ -436,13 +436,13 @@ public class BoxedVertical extends View{
         invalidate();
     }
 
-    public void setGradientStart(int colorID) {
-        gradientStart = ContextCompat.getColor(getContext(), colorID);
+    public void setGradientStart(int colour) {
+        gradientStart = colour;
         invalidate();
     }
 
-    public void setGradientEnd(int colorID) {
-        gradientEnd = ContextCompat.getColor(getContext(), colorID);
+    public void setGradientEnd(int colour) {
+        gradientEnd = colour;
         invalidate();
     }
 
