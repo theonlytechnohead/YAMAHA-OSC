@@ -32,6 +32,7 @@
 			tools:ignore="NestedWeights" />
 
 		<Button
+			android:id="@+id/mix2_button"
 			style="@style/Widget.Theme.TouchFaders.MixButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -40,6 +41,7 @@
 			android:text="@string/mix_2" />
 
 		<Button
+			android:id="@+id/mix3_button"
 			style="@style/Widget.Theme.TouchFaders.MixButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -48,6 +50,7 @@
 			android:text="@string/mix_3" />
 
 		<Button
+			android:id="@+id/mix4_button"
 			style="@style/Widget.Theme.TouchFaders.MixButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -56,6 +59,7 @@
 			android:text="@string/mix_4" />
 
 		<Button
+			android:id="@+id/mix5_button"
 			style="@style/Widget.Theme.TouchFaders.MixButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -64,6 +68,7 @@
 			android:text="@string/mix_5" />
 
 		<Button
+			android:id="@+id/mix6_button"
 			style="@style/Widget.Theme.TouchFaders.MixButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -85,116 +90,100 @@
 		app:layout_constraintTop_toBottomOf="@+id/mixbutton_layout">
 
 		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="45dp"
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
 			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
 			android:id="@+id/fader1" />
 
-
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader2"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader2" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader3"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader3" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader4"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader4" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader5"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader5" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader6"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader6" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader7"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader7" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader8"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader8" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader9"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader9" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader10"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader10" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader11"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader11" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader12"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader12" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader13"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader13" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader14"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader14" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader15"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader15" />
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader16"
-			style="@style/Widget.Theme.TouchFaders.Fader"
-			android:layout_width="45dp"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
+			android:layout_width="35dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader16" />
 
 	</LinearLayout>
 

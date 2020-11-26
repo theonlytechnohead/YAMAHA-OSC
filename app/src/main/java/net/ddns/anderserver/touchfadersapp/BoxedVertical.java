@@ -236,8 +236,8 @@ public class BoxedVertical extends View{
         float x = cWidth / 2f - dRect.width() / 2f - dRect.left;
         int textColor = mTextPaint.getColor();
 
-        Rect r_white = new Rect((int) x, (int) (getHeight() - mPoints), cWidth, getHeight());
-        Rect r_black = new Rect((int) x, (int) 1, (int) (x + cWidth), (int) (getHeight() - mPoints));
+        Rect r_white = new Rect((int) x, (int) mProgressSweep, cWidth, getHeight());
+        Rect r_black = new Rect((int) x, 0, (int) (x + cWidth), (int) mProgressSweep);
 
         canvas.save();
         canvas.clipRect(r_black);
@@ -283,8 +283,7 @@ public class BoxedVertical extends View{
                 case MotionEvent.ACTION_DOWN:
                     touchStarted_X = (int) event.getAxisValue(MotionEvent.AXIS_X);
                     touchStarted_Y = (int) event.getAxisValue(MotionEvent.AXIS_Y);
-                    if (mOnValuesChangeListener != null)
-                        mOnValuesChangeListener.onStartTrackingTouch(this);
+                    //if (mOnValuesChangeListener != null) mOnValuesChangeListener.onStartTrackingTouch(this);
                     if (!mTouchDisabled) updateOnTouch(event);
                     progressOffset = (int) (Math.round(event.getY()) - mProgressSweep);
                     break;
@@ -300,14 +299,12 @@ public class BoxedVertical extends View{
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (mOnValuesChangeListener != null)
-                        mOnValuesChangeListener.onStopTrackingTouch(this);
+                    //if (mOnValuesChangeListener != null) mOnValuesChangeListener.onStopTrackingTouch(this);
                     setPressed(false);
                     this.getParent().requestDisallowInterceptTouchEvent(false);
                     break;
                 case MotionEvent.ACTION_CANCEL:
-                    if (mOnValuesChangeListener != null)
-                        mOnValuesChangeListener.onStopTrackingTouch(this);
+                    //if (mOnValuesChangeListener != null) mOnValuesChangeListener.onStopTrackingTouch(this);
                     setPressed(false);
                     this.getParent().requestDisallowInterceptTouchEvent(false);
                     break;
@@ -386,7 +383,8 @@ public class BoxedVertical extends View{
         mProgressSweep = getHeight() - mProgressSweep;
 
         if (mOnValuesChangeListener != null) {
-            mOnValuesChangeListener.onPointsChanged(this, mPoints);
+            // Avoid OSC loopback stuff
+            //mOnValuesChangeListener.onPointsChanged(this, mPoints);
         }
 
         invalidate();
@@ -400,8 +398,8 @@ public class BoxedVertical extends View{
          * @param points     The current point value.
          */
         void onPointsChanged(BoxedVertical boxedPoints, int points);
-        void onStartTrackingTouch(BoxedVertical boxedPoints);
-        void onStopTrackingTouch(BoxedVertical boxedPoints);
+        //void onStartTrackingTouch(BoxedVertical boxedPoints);
+        //void onStopTrackingTouch(BoxedVertical boxedPoints);
     }
 
     public void setValue(int points) {
@@ -435,6 +433,16 @@ public class BoxedVertical extends View{
 
     public void setCornerRadius(int mRadius) {
         this.mCornerRadius = mRadius;
+        invalidate();
+    }
+
+    public void setGradientStart(int colorID) {
+        gradientStart = ContextCompat.getColor(getContext(), colorID);
+        invalidate();
+    }
+
+    public void setGradientEnd(int colorID) {
+        gradientEnd = ContextCompat.getColor(getContext(), colorID);
         invalidate();
     }
 

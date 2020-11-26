@@ -15,8 +15,7 @@
 	</style>
 
 	<style name="Theme.TouchFaders.Fullscreen" parent="Theme.TouchFaders">
-		<item name="android:actionBarStyle">@style/Widget.Theme.TouchFaders.ActionBar.Fullscreen
-		</item>
+		<item name="android:actionBarStyle">@style/Widget.Theme.TouchFaders.ActionBar.Fullscreen</item>
 		<item name="android:windowActionBarOverlay">true</item>
 		<item name="android:windowTranslucentStatus">true</item>
 		<item name="android:windowTranslucentNavigation">true</item>

@@ -11,31 +11,21 @@
 		<item name="android:insetTop">0dp</item>
 	</style>
 
-	<style name="Widget.Theme.TouchFaders.Fader" parent="">
-		<item name="vsb_max_value">1023</item>
-		<item name="vsb_bar_corner_radius">5dp</item>
-		<item name="vsb_thumb_container_corner_radius">5dp</item>
-		<item name="vsb_click_to_set_progress">true
-		</item> <!-- This one is debatable, doesn't work well with the HorizontalScrollView, revise later? -->
-		<!-- also HorizontalScrollView makes app freeze when adjusting faders too much because idk redraw something -->
-		<item name="vsb_use_thumb_to_set_progress">true</item>
-		<item name="vsb_show_thumb">true</item>
-		<item name="vsb_min_placeholder_position">inside</item>
-		<item name="vsb_max_placeholder_position">inside</item>
-		<item name="vsb_bar_width">35dp</item>
-		<item name="vsb_bar_progress_gradient_start">@color/light_blue_600</item>
-		<item name="vsb_bar_progress_gradient_end">@color/teal_200</item>
-	</style>
-
 	<style name="Widget.Theme.TouchFaders.BoxedVerticalSeekBar" parent="">
 		<item name="max">1023</item>
 		<item name="startValue">823</item>
 		<item name="min">0</item>
 		<item name="step">1</item>
 		<item name="gradientStart">@color/teal_200</item>
-		<item name="gradientEnd">@color/light_blue_600</item>
+		<item name="gradientEnd">@color/color_progress</item>
 		<item name="backgroundColor">@color/color_background</item>
-		<item name="corner">0</item>
-
+		<item name="corner">15</item>
+		<item name="textSize">15sp</item>
+		<item name="textColor">@color/black</item>
+		<item name="android:layout_marginStart">5dp</item>
+		<item name="android:layout_marginEnd">5dp</item>
+		<item name="android:layout_marginTop">15dp</item>
+		<item name="android:layout_marginBottom">20dp</item>
 	</style>
+
 </resources>

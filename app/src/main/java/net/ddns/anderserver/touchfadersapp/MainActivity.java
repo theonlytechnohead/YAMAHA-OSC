@@ -26,7 +26,6 @@ import com.illposed.osc.OSCPacketEvent;
 import com.illposed.osc.OSCPacketListener;
 import com.illposed.osc.transport.udp.OSCPortIn;
 import com.illposed.osc.transport.udp.OSCPortOut;
-import com.lukelorusso.verticalseekbar.VerticalSeekBar;
 
 import java.io.IOException;
 import java.net.BindException;
@@ -39,8 +38,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import kotlin.Unit;
-
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -51,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
 	OSCPortOut oscPortOut;
 	OSCPortIn oscPortIn;
-	ArrayList<VerticalSeekBar> faders = new ArrayList<>();
-	ArrayList<BoxedVertical> faderz = new ArrayList<>();
+	ArrayList<BoxedVertical> faders = new ArrayList<>();
 
 	OSCPacketListener packetListener = new OSCPacketListener() {
 		@Override
@@ -64,10 +60,8 @@ public class MainActivity extends AppCompatActivity {
 					String[] segments = message.getAddress().split("/");
 					int faderIndex = Integer.parseInt(segments[2].replaceAll("\\D+", "")) - 1; // extract only digits via RegEx
 					if (0 <= faderIndex && faderIndex < 16) {
-						VerticalSeekBar fader = faders.get(faderIndex);
-						fader.setOnProgressChangeListener((level) -> null);
-						fader.setProgress((int) message.getArguments().get(0));
-						fader.setOnProgressChangeListener((level) -> faderProgressChangeListener(fader, level));
+						BoxedVertical fader = faders.get(faderIndex);
+						fader.setValue((int) message.getArguments().get(0));
 					}
 				}
 			}
@@ -102,7 +96,58 @@ public class MainActivity extends AppCompatActivity {
 		AsyncTask.execute(this::setupFaders);
 
 		Button mix1_button = findViewById(R.id.mix1_button);
-		mix1_button.setOnClickListener(v -> SendOSCGetMix(1));
+		mix1_button.setOnClickListener(v -> {
+			SendOSCGetMix(1);
+			for (BoxedVertical fader : faders) {
+				fader.setGradientEnd(R.color.mix1);
+				fader.setGradientStart(R.color.mix1_lighter);
+			}
+		});
+
+		Button mix2_button = findViewById(R.id.mix2_button);
+		mix2_button.setOnClickListener(v -> {
+			SendOSCGetMix(2);
+			for (BoxedVertical fader : faders) {
+				fader.setGradientEnd(R.color.mix2);
+				fader.setGradientStart(R.color.mix2_lighter);
+			}
+		});
+
+		Button mix3_button = findViewById(R.id.mix3_button);
+		mix3_button.setOnClickListener(v -> {
+			SendOSCGetMix(3);
+			for (BoxedVertical fader : faders) {
+				fader.setGradientEnd(R.color.mix3);
+				fader.setGradientStart(R.color.mix3_lighter);
+			}
+		});
+
+		Button mix4_button = findViewById(R.id.mix4_button);
+		mix4_button.setOnClickListener(v -> {
+			SendOSCGetMix(4);
+			for (BoxedVertical fader : faders) {
+				fader.setGradientEnd(R.color.mix4);
+				fader.setGradientStart(R.color.mix4_lighter);
+			}
+		});
+
+		Button mix5_button = findViewById(R.id.mix5_button);
+		mix5_button.setOnClickListener(v -> {
+			SendOSCGetMix(5);
+			for (BoxedVertical fader : faders) {
+				fader.setGradientEnd(R.color.mix5);
+				fader.setGradientStart(R.color.mix5_lighter);
+			}
+		});
+
+		Button mix6_button = findViewById(R.id.mix6_button);
+		mix6_button.setOnClickListener(v -> {
+			SendOSCGetMix(6);
+			for (BoxedVertical fader : faders) {
+				fader.setGradientEnd(R.color.mix6);
+				fader.setGradientStart(R.color.mix6_lighter);
+			}
+		});
 	}
 
 	@Override
@@ -207,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void setupFaders () {
-		faderz.add(findViewById(R.id.fader1));
+		faders.add(findViewById(R.id.fader1));
 		faders.add(findViewById(R.id.fader2));
 		faders.add(findViewById(R.id.fader3));
 		faders.add(findViewById(R.id.fader4));
@@ -224,34 +269,27 @@ public class MainActivity extends AppCompatActivity {
 		faders.add(findViewById(R.id.fader15));
 		faders.add(findViewById(R.id.fader16));
 
+		faders.get(0).setGradientEnd(R.color.mix1);
+		faders.get(0).setGradientStart(R.color.mix1_lighter);
 
-		for (VerticalSeekBar fader : faders) {
-			fader.setOnProgressChangeListener(level -> faderProgressChangeListener(fader, level));
+		faders.get(1).setGradientEnd(R.color.mix2);
+		faders.get(1).setGradientStart(R.color.mix2_lighter);
+
+		faders.get(2).setGradientEnd(R.color.mix3);
+		faders.get(2).setGradientStart(R.color.mix3_lighter);
+
+		faders.get(3).setGradientEnd(R.color.mix4);
+		faders.get(3).setGradientStart(R.color.mix4_lighter);
+
+		faders.get(4).setGradientEnd(R.color.mix5);
+		faders.get(4).setGradientStart(R.color.mix5_lighter);
+
+		faders.get(5).setGradientEnd(R.color.mix6);
+		faders.get(5).setGradientStart(R.color.mix6_lighter);
+
+		for (BoxedVertical fader: faders) {
+			fader.setOnBoxedPointsChangeListener((boxedPoints, points) -> SendOSCFaderValue(faders.indexOf(fader) + 1, points));
 		}
-
-		for (BoxedVertical fader: faderz) {
-			fader.setOnBoxedPointsChangeListener(new BoxedVertical.OnValuesChangeListener() {
-				@Override
-				public void onPointsChanged (BoxedVertical boxedPoints, int points) {
-					SendOSCFaderValue(faderz.indexOf(fader), points);
-				}
-
-				@Override
-				public void onStartTrackingTouch (BoxedVertical boxedPoints) {
-
-				}
-
-				@Override
-				public void onStopTrackingTouch (BoxedVertical boxedPoints) {
-
-				}
-			});
-		}
-	}
-
-	Unit faderProgressChangeListener (VerticalSeekBar fader, int level) {
-		SendOSCFaderValue(faders.indexOf(fader) + 1, level);
-		return null;
 	}
 
 	public void SendOSCFaderValue (int fader, int faderValue) {
