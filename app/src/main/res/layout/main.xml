@@ -84,12 +84,12 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/mixbutton_layout">
 
-		<com.lukelorusso.verticalseekbar.VerticalSeekBar
-			android:id="@+id/fader1"
-			style="@style/Widget.Theme.TouchFaders.Fader"
+		<net.ddns.anderserver.touchfadersapp.BoxedVertical
 			android:layout_width="45dp"
 			android:layout_height="match_parent"
-			app:vsb_progress="823" />
+			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
+			android:id="@+id/fader1" />
+
 
 		<com.lukelorusso.verticalseekbar.VerticalSeekBar
 			android:id="@+id/fader2"

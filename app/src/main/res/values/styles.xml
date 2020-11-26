@@ -26,4 +26,16 @@
 		<item name="vsb_bar_progress_gradient_start">@color/light_blue_600</item>
 		<item name="vsb_bar_progress_gradient_end">@color/teal_200</item>
 	</style>
+
+	<style name="Widget.Theme.TouchFaders.BoxedVerticalSeekBar" parent="">
+		<item name="max">1023</item>
+		<item name="startValue">823</item>
+		<item name="min">0</item>
+		<item name="step">1</item>
+		<item name="gradientStart">@color/teal_200</item>
+		<item name="gradientEnd">@color/light_blue_600</item>
+		<item name="backgroundColor">@color/color_background</item>
+		<item name="corner">0</item>
+
+	</style>
 </resources>

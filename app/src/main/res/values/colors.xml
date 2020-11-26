@@ -18,4 +18,9 @@
 	<color name="mix4">#D6C63A</color>
 	<color name="mix5">#9C27B0</color>
 	<color name="mix6">#FF6D00</color>
+
+	<!-- VerticalSeekBar -->
+	<color name="color_progress">#fbfbfb</color>
+	<color name="color_background">#4b4b4b</color>
+	<color name="color_text">#00B7FF</color>
 </resources>

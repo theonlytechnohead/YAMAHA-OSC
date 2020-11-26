@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 	OSCPortOut oscPortOut;
 	OSCPortIn oscPortIn;
 	ArrayList<VerticalSeekBar> faders = new ArrayList<>();
+	ArrayList<BoxedVertical> faderz = new ArrayList<>();
 
 	OSCPacketListener packetListener = new OSCPacketListener() {
 		@Override
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void setupFaders () {
-		faders.add(findViewById(R.id.fader1));
+		faderz.add(findViewById(R.id.fader1));
 		faders.add(findViewById(R.id.fader2));
 		faders.add(findViewById(R.id.fader3));
 		faders.add(findViewById(R.id.fader4));
@@ -226,6 +227,25 @@ public class MainActivity extends AppCompatActivity {
 
 		for (VerticalSeekBar fader : faders) {
 			fader.setOnProgressChangeListener(level -> faderProgressChangeListener(fader, level));
+		}
+
+		for (BoxedVertical fader: faderz) {
+			fader.setOnBoxedPointsChangeListener(new BoxedVertical.OnValuesChangeListener() {
+				@Override
+				public void onPointsChanged (BoxedVertical boxedPoints, int points) {
+					SendOSCFaderValue(faderz.indexOf(fader), points);
+				}
+
+				@Override
+				public void onStartTrackingTouch (BoxedVertical boxedPoints) {
+
+				}
+
+				@Override
+				public void onStopTrackingTouch (BoxedVertical boxedPoints) {
+
+				}
+			});
 		}
 	}
 
