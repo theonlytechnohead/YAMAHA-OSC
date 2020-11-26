@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 			OSCPacket packet = event.getPacket();
 			if (packet instanceof OSCMessage) {
 				OSCMessage message = (OSCMessage) packet;
-				if (message.getAddress().contains("/mix1/fader")) {
+				if (message.getAddress().contains("/mix" + currentMix + "/fader")) {
 					String[] segments = message.getAddress().split("/");
 					int faderIndex = Integer.parseInt(segments[2].replaceAll("\\D+", "")) - 1; // extract only digits via RegEx
 					if (0 <= faderIndex && faderIndex < 16) {
@@ -92,17 +92,10 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.main);
 
 		AsyncTask.execute(this::OpenOSCPortIn);
-
 		AsyncTask.execute(this::OpenOSCPortOut);
 
+		AsyncTask.execute(this::setupButtons);
 		AsyncTask.execute(this::setupFaders);
-
-		findViewById(R.id.mix1_button).setOnClickListener(v -> selectMix(1));
-		findViewById(R.id.mix2_button).setOnClickListener(v -> selectMix(2));
-		findViewById(R.id.mix3_button).setOnClickListener(v -> selectMix(3));
-		findViewById(R.id.mix4_button).setOnClickListener(v -> selectMix(4));
-		findViewById(R.id.mix5_button).setOnClickListener(v -> selectMix(5));
-		findViewById(R.id.mix6_button).setOnClickListener(v -> selectMix(6));
 	}
 
 	@Override
@@ -206,6 +199,15 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
+	public void setupButtons () {
+		findViewById(R.id.mix1_button).setOnClickListener(v -> selectMix(1));
+		findViewById(R.id.mix2_button).setOnClickListener(v -> selectMix(2));
+		findViewById(R.id.mix3_button).setOnClickListener(v -> selectMix(3));
+		findViewById(R.id.mix4_button).setOnClickListener(v -> selectMix(4));
+		findViewById(R.id.mix5_button).setOnClickListener(v -> selectMix(5));
+		findViewById(R.id.mix6_button).setOnClickListener(v -> selectMix(6));
+	}
+
 	public void setupFaders () {
 		faders.add(findViewById(R.id.fader1));
 		faders.add(findViewById(R.id.fader2));
@@ -266,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
 			if (oscPortOut != null) {
 				ArrayList<Object> arguments = new ArrayList<>();
 				arguments.add(faderValue);
-				OSCMessage message = new OSCMessage("/mix1/fader" + fader, arguments);
+				OSCMessage message = new OSCMessage("/mix" + currentMix + "/fader" + fader, arguments);
 
 				try {
 					oscPortOut.send(message);
