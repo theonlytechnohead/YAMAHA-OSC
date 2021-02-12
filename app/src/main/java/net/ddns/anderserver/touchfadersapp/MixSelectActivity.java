@@ -22,6 +22,9 @@ import java.util.ArrayList;
 
 public class MixSelectActivity extends AppCompatActivity implements MixSelectRecyclerViewAdapter.MixButtonClickListener {
 
+    public static String EXTRA_NUM_CHANNELS = "EXTRA_NUM_CHANNELS";
+    public static String EXTRA_MIX_INDEX = "EXTRA_MIX_INDEX";
+
     MixSelectRecyclerViewAdapter adapter;
 
     @Override
@@ -84,7 +87,10 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
     @Override
     public void onItemClick(View view, int index) {
         int mix = index + 1;
-        Toast.makeText(this, "You clicked " + adapter.getItem(index) + " which is mix " + mix, Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, MainActivity.class));
+        //Toast.makeText(this, "You clicked " + adapter.getItem(index) + " which is mix " + mix, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        intent.putExtra(MixSelectActivity.EXTRA_NUM_CHANNELS, 64);
+        intent.putExtra(MixSelectActivity.EXTRA_MIX_INDEX, index);
+        startActivity(intent);
     }
 }

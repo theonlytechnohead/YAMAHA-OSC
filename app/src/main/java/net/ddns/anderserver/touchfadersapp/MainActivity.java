@@ -1,9 +1,11 @@
 package net.ddns.anderserver.touchfadersapp;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -50,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
 	OSCPortIn oscPortIn;
 	ArrayList<BoxedVertical> faders = new ArrayList<>();
 
-	int currentMix = 1;
+	int numChannels;
+	int currentMix;
 
 	OSCPacketListener packetListener = new OSCPacketListener() {
 		@Override
@@ -83,11 +86,15 @@ public class MainActivity extends AppCompatActivity {
 		}
 	};
 
+	@SuppressLint("StaticFieldLeak")
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		//BasicConfigurator.configure();
+
+		numChannels = getIntent().getIntExtra(MixSelectActivity.EXTRA_NUM_CHANNELS, 64);
+		currentMix = getIntent().getIntExtra(MixSelectActivity.EXTRA_MIX_INDEX, 0) + 1;
 
 		setContentView(R.layout.main);
 
@@ -95,7 +102,15 @@ public class MainActivity extends AppCompatActivity {
 		AsyncTask.execute(this::OpenOSCPortOut);
 
 		AsyncTask.execute(this::setupButtons);
-		AsyncTask.execute(this::setupFaders);
+		new AsyncTask<Void, Void, Void>() {
+			protected void onPreExecute() { }
+			protected Void doInBackground(Void... unused) {
+				setupFaders();
+				return null;
+			}
+			protected void onPostExecute(Void unused) { selectMix(currentMix); }
+		}.execute();
+		//AsyncTask.execute(this::setupFaders);
 	}
 
 	@Override
