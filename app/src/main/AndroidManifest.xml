@@ -22,6 +22,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".MixSelectActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="TouchFaders"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.TouchFaders.Fullscreen">
+
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

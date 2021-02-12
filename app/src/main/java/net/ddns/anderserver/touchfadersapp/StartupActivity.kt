@@ -17,24 +17,26 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.preference.PreferenceManager
-// Cool kotlin stuff below #noMoreFindViewByID
-import kotlinx.android.synthetic.main.startup.startupLayout
-import kotlinx.android.synthetic.main.startup.ipEditText
-import kotlinx.android.synthetic.main.startup.startButton
+import net.ddns.anderserver.touchfadersapp.databinding.StartupBinding
 
 class StartupActivity : AppCompatActivity() {
+
+    private lateinit var binding: StartupBinding
 
     var sharedPreferences: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.startup)
+        binding = StartupBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         // Making it fullscreen...
         val actionBar = supportActionBar
         actionBar?.hide()
-        startupLayout.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
+        binding.startupLayout.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -71,8 +73,8 @@ class StartupActivity : AppCompatActivity() {
 
         };
          */
-        ipEditText.setText(sharedPreferences?.getString("ipAddress", "192.168.1.2"))
-        ipEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
+        binding.ipEditText.setText(sharedPreferences?.getString("ipAddress", "192.168.1.2"))
+        binding.ipEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 val view = this.currentFocus
                 if (view != null) {
@@ -80,12 +82,12 @@ class StartupActivity : AppCompatActivity() {
                     imm.hideSoftInputFromWindow(view.windowToken, 0)
                 }
                 val handler = Handler(Looper.getMainLooper())
-                handler.post { startButton.performClick() }
+                handler.post { binding.startButton.performClick() }
                 return@setOnEditorActionListener true
             }
             false
         }
-        ipEditText.addTextChangedListener(object : TextWatcher {
+        binding.ipEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
@@ -96,9 +98,10 @@ class StartupActivity : AppCompatActivity() {
 
     private fun checkNetwork() {
         if (isConnected(applicationContext)) {
-            startButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
+            //binding.startButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
+            binding.startButton.setOnClickListener { startActivity(Intent(this, MixSelectActivity::class.java)) }
         } else {
-            startButton.setOnClickListener { checkNetwork() }
+            binding.startButton.setOnClickListener { checkNetwork() }
             Toast.makeText(this, "You're not connected to a network!", Toast.LENGTH_SHORT).show()
         }
     }
