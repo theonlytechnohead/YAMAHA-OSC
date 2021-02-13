@@ -11,6 +11,10 @@
 	<color name="black_overlay">#66000000</color>
 	<color name="background">#B0000000</color>
 
+	<!-- Metering colours -->
+	<color name="meter_start">#00A500</color>
+	<color name="meter_end">#00D600</color>
+
 	<!-- Mix colours -->
 	<color name="mix1">#F4511E</color>
 	<color name="mix1_lighter">#FF9E80</color>

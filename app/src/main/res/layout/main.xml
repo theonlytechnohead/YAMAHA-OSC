@@ -189,16 +189,31 @@
 
 	</LinearLayout>
 
+	<net.ddns.anderserver.touchfadersapp.BoxedVertical
+		android:id="@+id/mixMeter"
+		android:layout_width="35dp"
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@+id/faderRecyclerView"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:max="1023"
+		app:startValue="823"
+		app:textEnabled="false"
+		app:touchDisabled="true"
+		app:gradientStart="@color/meter_start"
+		app:gradientEnd="@color/meter_end"/>
+
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/faderRecyclerView"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:orientation="horizontal"
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-		tools:listitem="@layout/recyclerview_fader_strip"
 		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toEndOf="@id/mixMeter"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/mixbutton_layout"/>
+		app:layout_constraintTop_toBottomOf="@+id/mixbutton_layout"
+		tools:listitem="@layout/recyclerview_fader_strip" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

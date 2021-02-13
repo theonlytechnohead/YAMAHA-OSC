@@ -5,21 +5,17 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.DisplayCutout;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.illposed.osc.OSCBadDataEvent;
@@ -41,6 +37,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -147,14 +146,20 @@ public class MainActivity extends AppCompatActivity {
 			frameLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
 				DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
 				//LinearLayout faderLayout = findViewById(R.id.faderLayout);
-				RecyclerView faderLayoutView = findViewById(R.id.faderRecyclerView);
-				ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) faderLayoutView.getLayoutParams();
+				//RecyclerView faderLayoutView = findViewById(R.id.faderRecyclerView);
+				BoxedVertical meter = findViewById(R.id.mixMeter);
+				//ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) faderLayoutView.getLayoutParams();
+				ViewGroup.LayoutParams meterParams = meter.getLayoutParams();
 				assert cutout != null;
-				if (cutout.getSafeInsetLeft() == layoutParams.leftMargin) return;
-				layoutParams.leftMargin = cutout.getSafeInsetLeft();
-				layoutParams.rightMargin = cutout.getSafeInsetRight();
+				final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+				int pixels = (int) (35 * scale + 0.5f);
+				if (cutout.getSafeInsetLeft() == meterParams.width) return;
+				meterParams.width = cutout.getSafeInsetLeft();
+				if (meterParams.width == 0) {
+					meterParams.width = pixels;
+				}
 				Handler handler = new Handler(Looper.getMainLooper());
-				handler.post(() -> faderLayoutView.setLayoutParams(layoutParams));
+				handler.post(() -> meter.setLayoutParams(meterParams));
 				//Log.i("CUTOUT", "safeLeft: " + cutout.getSafeInsetLeft() + "  safeRight: " + cutout.getSafeInsetRight());
 			});
 		}
