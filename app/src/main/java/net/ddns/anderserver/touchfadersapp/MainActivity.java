@@ -19,6 +19,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.illposed.osc.OSCBadDataEvent;
 import com.illposed.osc.OSCBundle;
@@ -51,9 +53,10 @@ public class MainActivity extends AppCompatActivity {
 	OSCPortOut oscPortOut;
 	OSCPortIn oscPortIn;
 	ArrayList<BoxedVertical> faders = new ArrayList<>();
+	FaderStripRecyclerViewAdapter adapter;
 
-	int numChannels;
-	int currentMix;
+	private int numChannels;
+	private int currentMix;
 
 	OSCPacketListener packetListener = new OSCPacketListener() {
 		@Override
@@ -101,7 +104,15 @@ public class MainActivity extends AppCompatActivity {
 		AsyncTask.execute(this::OpenOSCPortIn);
 		AsyncTask.execute(this::OpenOSCPortOut);
 
-		AsyncTask.execute(this::setupButtons);
+		RecyclerView recyclerView = findViewById(R.id.faderRecyclerView);
+		//recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+		adapter = new FaderStripRecyclerViewAdapter(this, numChannels, currentMix);
+		adapter.setValuesChangeListener((boxedPoints, points) -> SendOSCFaderValue(adapter.getFaderIndex(boxedPoints) + 1, points));
+		recyclerView.setAdapter(adapter);
+		//selectMix(currentMix);
+
+		//AsyncTask.execute(this::setupButtons);
+		/*
 		new AsyncTask<Void, Void, Void>() {
 			protected void onPreExecute() { }
 			protected Void doInBackground(Void... unused) {
@@ -110,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
 			}
 			protected void onPostExecute(Void unused) { selectMix(currentMix); }
 		}.execute();
+		*/
 		//AsyncTask.execute(this::setupFaders);
 	}
 
@@ -134,14 +146,15 @@ public class MainActivity extends AppCompatActivity {
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
 			frameLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
 				DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-				LinearLayout faderLayout = findViewById(R.id.faderLayout);
-				ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) faderLayout.getLayoutParams();
+				//LinearLayout faderLayout = findViewById(R.id.faderLayout);
+				RecyclerView faderLayoutView = findViewById(R.id.faderRecyclerView);
+				ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) faderLayoutView.getLayoutParams();
 				assert cutout != null;
 				if (cutout.getSafeInsetLeft() == layoutParams.leftMargin) return;
 				layoutParams.leftMargin = cutout.getSafeInsetLeft();
 				layoutParams.rightMargin = cutout.getSafeInsetRight();
 				Handler handler = new Handler(Looper.getMainLooper());
-				handler.post(() -> faderLayout.setLayoutParams(layoutParams));
+				handler.post(() -> faderLayoutView.setLayoutParams(layoutParams));
 				//Log.i("CUTOUT", "safeLeft: " + cutout.getSafeInsetLeft() + "  safeRight: " + cutout.getSafeInsetRight());
 			});
 		}
@@ -241,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
 		faders.add(findViewById(R.id.fader15));
 		faders.add(findViewById(R.id.fader16));
 
+		/*
 		faders.get(0).setGradientEnd(getApplicationContext().getColor(R.color.mix1));
 		faders.get(0).setGradientStart(getApplicationContext().getColor(R.color.mix1_lighter));
 
@@ -258,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
 		faders.get(5).setGradientEnd(getApplicationContext().getColor(R.color.mix6));
 		faders.get(5).setGradientStart(getApplicationContext().getColor(R.color.mix6_lighter));
+		 */
 
 		for (BoxedVertical fader: faders) {
 			fader.setOnBoxedPointsChangeListener((boxedPoints, points) -> SendOSCFaderValue(faders.indexOf(fader) + 1, points));

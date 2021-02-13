@@ -82,6 +82,7 @@
 
 	<LinearLayout
 		android:id="@+id/faderLayout"
+		android:visibility="gone"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:orientation="horizontal"
@@ -187,5 +188,17 @@
 			android:id="@+id/fader16" />
 
 	</LinearLayout>
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/faderRecyclerView"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:orientation="horizontal"
+		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+		tools:listitem="@layout/recyclerview_fader_strip"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/mixbutton_layout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
