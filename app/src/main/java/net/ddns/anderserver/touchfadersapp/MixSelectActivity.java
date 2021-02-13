@@ -22,8 +22,10 @@ import java.util.ArrayList;
 
 public class MixSelectActivity extends AppCompatActivity implements MixSelectRecyclerViewAdapter.MixButtonClickListener {
 
-    public static String EXTRA_NUM_CHANNELS = "EXTRA_NUM_CHANNELS";
     public static String EXTRA_MIX_INDEX = "EXTRA_MIX_INDEX";
+
+    private int numChannels;
+    private int numMixes;
 
     MixSelectRecyclerViewAdapter adapter;
 
@@ -33,14 +35,12 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
 
         setContentView(R.layout.mix_selection);
 
+        numChannels = getIntent().getIntExtra(StartupActivity.EXTRA_NUM_CHANNELS, 64);
+        numMixes = getIntent().getIntExtra(StartupActivity.EXTRA_NUM_MIXES, 6);
+
         // data to populate the RecyclerView with
         ArrayList<String> mixNames = new ArrayList<>();
-        mixNames.add("Mix 1");
-        mixNames.add("Mix 2");
-        mixNames.add("Mix 3");
-        mixNames.add("Mix 4");
-        mixNames.add("Mix 5");
-        mixNames.add("Mix 6");
+        for (int i = 1; i <= numMixes; i ++) mixNames.add("Mix " + i);
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.mix_select_recyclerview);
@@ -89,7 +89,7 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
         int mix = index + 1;
         //Toast.makeText(this, "You clicked " + adapter.getItem(index) + " which is mix " + mix, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
-        intent.putExtra(MixSelectActivity.EXTRA_NUM_CHANNELS, 64);
+        intent.putExtra(StartupActivity.EXTRA_NUM_CHANNELS, numChannels);
         intent.putExtra(MixSelectActivity.EXTRA_MIX_INDEX, index);
         startActivity(intent);
     }

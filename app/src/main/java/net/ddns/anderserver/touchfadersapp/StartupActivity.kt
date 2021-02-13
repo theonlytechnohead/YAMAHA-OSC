@@ -23,6 +23,9 @@ import net.ddns.anderserver.touchfadersapp.databinding.StartupBinding
 
 class StartupActivity : AppCompatActivity() {
 
+    private var numChannels = 64
+    private var numMixes = 6
+
     private lateinit var binding: StartupBinding
 
     var sharedPreferences: SharedPreferences? = null
@@ -99,7 +102,12 @@ class StartupActivity : AppCompatActivity() {
     private fun checkNetwork() {
         if (isConnected(applicationContext)) {
             //binding.startButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
-            binding.startButton.setOnClickListener { startActivity(Intent(this, MixSelectActivity::class.java)) }
+            binding.startButton.setOnClickListener {
+                val intent = Intent(baseContext, MixSelectActivity::class.java)
+                intent.putExtra(EXTRA_NUM_CHANNELS, numChannels)
+                intent.putExtra(EXTRA_NUM_MIXES, numMixes)
+                startActivity(intent)
+            }
         } else {
             binding.startButton.setOnClickListener { checkNetwork() }
             Toast.makeText(this, "You're not connected to a network!", Toast.LENGTH_SHORT).show()
@@ -107,6 +115,9 @@ class StartupActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val EXTRA_NUM_CHANNELS = "EXTRA_NUM_CHANNELS"
+        const val EXTRA_NUM_MIXES = "EXTRA_NUM_MIXES"
+
         fun isConnected(context: Context): Boolean {
             val connectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkCapabilities = connectivityManager.activeNetwork ?: return false

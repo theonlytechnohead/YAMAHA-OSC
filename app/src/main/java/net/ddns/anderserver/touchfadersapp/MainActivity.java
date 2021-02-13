@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
 		//BasicConfigurator.configure();
 
-		numChannels = getIntent().getIntExtra(MixSelectActivity.EXTRA_NUM_CHANNELS, 64);
+		numChannels = getIntent().getIntExtra(StartupActivity.EXTRA_NUM_CHANNELS, 64);
 		currentMix = getIntent().getIntExtra(MixSelectActivity.EXTRA_MIX_INDEX, 0) + 1;
 
 		setContentView(R.layout.main);
