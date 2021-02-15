@@ -68,7 +68,7 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
             if (position == faderLevels.size() - 1) {
                 DisplayCutout cutout = getActivity(context).getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-                marginLayoutParams.rightMargin = cutout.getSafeInsetRight();
+                if (cutout != null) marginLayoutParams.rightMargin = cutout.getSafeInsetRight();
             } else {
                 marginLayoutParams.rightMargin = 0;
             }
