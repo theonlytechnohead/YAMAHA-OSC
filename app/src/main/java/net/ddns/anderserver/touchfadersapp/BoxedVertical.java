@@ -86,9 +86,18 @@ public class BoxedVertical extends View{
      */
     private boolean mTouchDisabled = true;
 
+    private boolean touchAllowed = true;
+
     private float mProgressSweep = 0;
-    //private Paint mProgressPaint;
+
+    private final Paint drawPaint = new Paint();
+    private final Path clippingPath = new Path();
+    private final RectF boundingRect = new RectF();
+    private LinearGradient nearClipGradient;
+    private LinearGradient overUnityGradient;
+    private LinearGradient normalGradient;
     private Paint mTextPaint;
+
     private OnValuesChangeListener mOnValuesChangeListener;
     private int gradientStart;
     private int gradientEnd;
@@ -97,7 +106,7 @@ public class BoxedVertical extends View{
     private Bitmap mDefaultImage;
     private Bitmap mMinImage;
     private Bitmap mMaxImage;
-    private Rect dRect = new Rect();
+    private final Rect dRect = new Rect();
     private boolean firstRun = true;
     private int progressOffset;
     private int touchStarted_X;
@@ -185,20 +194,43 @@ public class BoxedVertical extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Paint paint = new Paint();
+        if (firstRun){
+            setValue(mPoints);
+            firstRun = false;
+        }
 
-        paint.setAlpha(255);
-        canvas.translate(0, 0);
-        Path mPath = new Path();
-        mPath.addRoundRect(new RectF(0, 0, getWidth(), getHeight()), mCornerRadius, mCornerRadius, Path.Direction.CCW);
-        canvas.clipPath(mPath, Region.Op.INTERSECT);
-        paint.setColor(backgroundColor);
-        paint.setAntiAlias(true);
-        canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
+        boundingRect.bottom = getHeight();
+        boundingRect.right = getWidth();
+        clippingPath.addRoundRect(boundingRect, mCornerRadius, mCornerRadius, Path.Direction.CCW);
+        canvas.clipPath(clippingPath, Region.Op.INTERSECT);
+        drawPaint.setColor(backgroundColor);
+        drawPaint.setAntiAlias(true);
+        canvas.drawRect(0, 0, getWidth(), getHeight(), drawPaint);
 
-        paint.setShader(new LinearGradient(0, mProgressSweep, 0, getHeight(), gradientEnd, gradientStart, Shader.TileMode.MIRROR));
-        //canvas.drawLine(getWidth()/2f, getHeight(), getWidth()/2f, mProgressSweep, mProgressPaint);
-        canvas.drawRect(0, mProgressSweep, getWidth(), getHeight(), paint);
+        if (mPoints >= 0.95f * mMax) {
+            if (nearClipGradient == null) {
+                nearClipGradient = new LinearGradient(0, mProgressSweep, 0, getHeight(), ContextCompat.getColor(getContext(), R.color.red), gradientStart, Shader.TileMode.MIRROR);
+            }
+            drawPaint.setShader(nearClipGradient);
+        } else if (0.8f * mMax <= mPoints && mPoints < 0.95f * mMax) {
+            if (overUnityGradient == null) {
+                overUnityGradient = new LinearGradient(0, mProgressSweep, 0, getHeight(), ContextCompat.getColor(getContext(), R.color.yellow), gradientStart, Shader.TileMode.MIRROR);
+            }
+            drawPaint.setShader(overUnityGradient);
+        } else {
+            if (normalGradient == null) {
+                normalGradient = new LinearGradient(0, mProgressSweep, 0, getHeight(), gradientEnd, gradientStart, Shader.TileMode.MIRROR);
+            }
+            drawPaint.setShader(normalGradient);
+        }
+        canvas.drawRect(0, mProgressSweep, getWidth(), getHeight(), drawPaint);
+
+        drawPaint.reset();
+        drawPaint.setColor(ContextCompat.getColor(getContext(), R.color.grey));
+        canvas.drawRect(getWidth()*0.1f, getHeight()*0.190f, getWidth()*0.9f, getHeight()*0.202f, drawPaint); // 0dB
+        canvas.drawRect(getWidth()*0.175f, getHeight()*0.387f, getWidth()*0.825f, getHeight()*0.395f, drawPaint); // -10dB
+        canvas.drawRect(getWidth()*0.35f, getHeight()*0.582f, getWidth()*0.65f, getHeight()*0.590f, drawPaint); // -20dB
+        canvas.drawRect(getWidth()*0.35f, getHeight()*0.778f, getWidth()*0.65f, getHeight()*0.786f, drawPaint); // -40dB
 
         if (mImageEnabled && mDefaultImage != null && mMinImage != null && mMaxImage != null){
             //If image is enabled, text will not be shown
@@ -218,11 +250,6 @@ public class BoxedVertical extends View{
                 String strPoint = String.valueOf(mPoints);
                 drawText(canvas, mTextPaint, strPoint);
             }
-        }
-
-        if (firstRun){
-            firstRun = false;
-            setValue(mPoints);
         }
     }
 
@@ -281,6 +308,7 @@ public class BoxedVertical extends View{
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    touchAllowed = true;
                     touchStarted_X = (int) event.getAxisValue(MotionEvent.AXIS_X);
                     touchStarted_Y = (int) event.getAxisValue(MotionEvent.AXIS_Y);
                     //if (mOnValuesChangeListener != null) mOnValuesChangeListener.onStartTrackingTouch(this);
@@ -289,11 +317,12 @@ public class BoxedVertical extends View{
                     break;
                 case MotionEvent.ACTION_MOVE:
                     int difference_X = abs((int) event.getAxisValue(MotionEvent.AXIS_X) - touchStarted_X);
-                    if (75 <= difference_X) {
+                    if (25 <= difference_X && touchAllowed) {
                         this.getParent().requestDisallowInterceptTouchEvent(false);
                     }
                     int difference_Y = abs((int) event.getAxisValue(MotionEvent.AXIS_Y) - touchStarted_Y);
-                    if (25 <= difference_Y) {
+                    if (15 <= difference_Y) {
+                        touchAllowed = false;
                         touchStarted_Y = mMax;
                         updateOnTouch(event);
                     }

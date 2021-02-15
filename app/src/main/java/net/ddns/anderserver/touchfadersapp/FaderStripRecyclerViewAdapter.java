@@ -1,6 +1,7 @@
 package net.ddns.anderserver.touchfadersapp;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +29,13 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
     public FaderStripRecyclerViewAdapter(Context context, int numChannels, int currentMix) {
         this.inflator = LayoutInflater.from(context);
         this.currentMix = currentMix;
+        //int[] attribute = {R.attr.startValue};
+        TypedArray array = context.obtainStyledAttributes(R.style.Widget_Theme_TouchFaders_BoxedVerticalSeekBar, new int[]{R.attr.startValue});
         for (int channel = 0; channel < numChannels; channel++ ){
-            faderLevels.add(823);
+            faderLevels.add(array.getInt(0, 623));
             faders.add(new BoxedVertical(context, null));
         }
+        array.recycle();
         colourArray = context.getResources().getIntArray(R.array.mix_colours);
         colourArrayLighter = context.getResources().getIntArray(R.array.mix_colours_lighter);
     }
@@ -49,7 +53,7 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
             faders.set(position, holder.fader);
         }
         int level = faderLevels.get(position);
-        holder.fader.setValue(level);
+        //holder.fader.setValue(level);
         holder.fader.setGradientEnd(colourArray[currentMix - 1]);
         holder.fader.setGradientStart(colourArrayLighter[currentMix - 1]);
         String number = String.valueOf((position + 1));

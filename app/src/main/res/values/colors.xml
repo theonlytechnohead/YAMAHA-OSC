@@ -4,7 +4,10 @@
 	<color name="teal_200">#FF03DAC5</color>
 	<color name="teal_700">#FF018786</color>
 	<color name="black">#FF000000</color>
+	<color name="grey">#959595</color>
 	<color name="white">#FFFFFFFF</color>
+	<color name="yellow">#FFFFFB00</color>
+	<color name="red">#FFFF0000</color>
 	<color name="light_blue_600">#FF039BE5</color>
 	<color name="light_blue_900">#FF01579B</color>
 	<color name="light_blue_A200">#FF40C4FF</color>
@@ -14,6 +17,27 @@
 	<!-- Metering colours -->
 	<color name="meter_start">#00A500</color>
 	<color name="meter_end">#00D600</color>
+
+	<!-- Channel colours -->
+	<color name="ch_blue">#0101FD</color>
+	<color name="ch_orange">#FF6601</color>
+	<color name="ch_brown">#996601</color>
+	<color name="ch_purple">#660199</color>
+	<color name="ch_cyan">#0199FF</color>
+	<color name="ch_pink">#FF6699</color>
+	<color name="ch_bergundy">#660101</color>
+	<color name="ch_green">#016633</color>
+
+	<array name="channel_colours">
+		<item>@color/ch_blue</item>
+		<item>@color/ch_orange</item>
+		<item>@color/ch_brown</item>
+		<item>@color/ch_purple</item>
+		<item>@color/ch_cyan</item>
+		<item>@color/ch_pink</item>
+		<item>@color/ch_bergundy</item>
+		<item>@color/ch_green</item>
+	</array>
 
 	<!-- Mix colours -->
 	<color name="mix1">#F4511E</color>

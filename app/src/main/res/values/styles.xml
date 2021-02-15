@@ -13,7 +13,7 @@
 
 	<style name="Widget.Theme.TouchFaders.BoxedVerticalSeekBar" parent="">
 		<item name="max">1023</item>
-		<item name="startValue">823</item>
+		<item name="startValue">623</item> <!-- now -10dB -->
 		<item name="min">0</item>
 		<item name="step">1</item>
 		<item name="gradientStart">@color/teal_200</item>

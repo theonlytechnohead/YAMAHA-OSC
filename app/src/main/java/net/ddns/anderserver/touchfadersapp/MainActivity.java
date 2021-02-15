@@ -16,7 +16,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.illposed.osc.OSCBadDataEvent;
 import com.illposed.osc.OSCBundle;
@@ -104,24 +106,10 @@ public class MainActivity extends AppCompatActivity {
 		AsyncTask.execute(this::OpenOSCPortOut);
 
 		RecyclerView recyclerView = findViewById(R.id.faderRecyclerView);
-		//recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 		adapter = new FaderStripRecyclerViewAdapter(this, numChannels, currentMix);
 		adapter.setValuesChangeListener((boxedPoints, points) -> SendOSCFaderValue(adapter.getFaderIndex(boxedPoints) + 1, points));
 		recyclerView.setAdapter(adapter);
-		//selectMix(currentMix);
 
-		//AsyncTask.execute(this::setupButtons);
-		/*
-		new AsyncTask<Void, Void, Void>() {
-			protected void onPreExecute() { }
-			protected Void doInBackground(Void... unused) {
-				setupFaders();
-				return null;
-			}
-			protected void onPostExecute(Void unused) { selectMix(currentMix); }
-		}.execute();
-		*/
-		//AsyncTask.execute(this::setupFaders);
 	}
 
 	@Override
