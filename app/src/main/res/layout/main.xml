@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -11,183 +12,6 @@
 	tools:context=".MainActivity"
 	android:id="@+id/fullscreen_frame">
 
-	<LinearLayout
-		android:id="@+id/mixbutton_layout"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:visibility="gone"
-		android:orientation="horizontal"
-		android:weightSum="6"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintLeft_toRightOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
-
-		<Button
-			android:id="@+id/mix1_button"
-			style="@style/Widget.Theme.TouchFaders.MixButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:backgroundTint="@color/mix1"
-			android:text="@string/mix_1"
-			tools:ignore="NestedWeights" />
-
-		<Button
-			android:id="@+id/mix2_button"
-			style="@style/Widget.Theme.TouchFaders.MixButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:backgroundTint="@color/mix2"
-			android:text="@string/mix_2" />
-
-		<Button
-			android:id="@+id/mix3_button"
-			style="@style/Widget.Theme.TouchFaders.MixButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:backgroundTint="@color/mix3"
-			android:text="@string/mix_3" />
-
-		<Button
-			android:id="@+id/mix4_button"
-			style="@style/Widget.Theme.TouchFaders.MixButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:backgroundTint="@color/mix4"
-			android:text="@string/mix_4" />
-
-		<Button
-			android:id="@+id/mix5_button"
-			style="@style/Widget.Theme.TouchFaders.MixButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:backgroundTint="@color/mix5"
-			android:text="@string/mix_5" />
-
-		<Button
-			android:id="@+id/mix6_button"
-			style="@style/Widget.Theme.TouchFaders.MixButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:backgroundTint="@color/mix6"
-			android:text="@string/mix_6" />
-
-	</LinearLayout>
-
-
-	<LinearLayout
-		android:id="@+id/faderLayout"
-		android:visibility="gone"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
-		android:orientation="horizontal"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/mixbutton_layout">
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader1" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader2" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader3" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader4" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader5" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader6" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader7" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader8" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader9" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader10" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader11" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader12" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader13" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader14" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader15" />
-
-		<net.ddns.anderserver.touchfadersapp.BoxedVertical
-			android:layout_width="35dp"
-			android:layout_height="match_parent"
-			style="@style/Widget.Theme.TouchFaders.BoxedVerticalSeekBar"
-			android:id="@+id/fader16" />
-
-	</LinearLayout>
 
 	<net.ddns.anderserver.touchfadersapp.BoxedVertical
 		android:id="@+id/mixMeter"
@@ -210,10 +34,10 @@
 		android:layout_height="0dp"
 		android:orientation="horizontal"
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintStart_toEndOf="@id/mixMeter"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/mixbutton_layout"
+		app:layout_constraintStart_toEndOf="@id/mixMeter"
 		tools:listitem="@layout/recyclerview_fader_strip" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

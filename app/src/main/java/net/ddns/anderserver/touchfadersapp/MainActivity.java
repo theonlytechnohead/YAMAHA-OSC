@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
 				if (message.getAddress().contains("/mix" + currentMix + "/fader")) {
 					String[] segments = message.getAddress().split("/");
 					int faderIndex = Integer.parseInt(segments[2].replaceAll("\\D+", "")) - 1; // extract only digits via RegEx
-					if (0 <= faderIndex && faderIndex < 16) {
-						BoxedVertical fader = faders.get(faderIndex);
-						fader.setValue((int) message.getArguments().get(0));
+					if (0 <= faderIndex && faderIndex < adapter.getItemCount()) {
+						adapter.setFaderLevel(faderIndex, (int) message.getArguments().get(0));
+						adapter.notifyDataSetChanged();
 					}
 				}
 			}
@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
 		AsyncTask.execute(this::OpenOSCPortIn);
 		AsyncTask.execute(this::OpenOSCPortOut);
-
 	}
 
 	@Override
@@ -219,70 +218,6 @@ public class MainActivity extends AppCompatActivity {
 			oscPortOut = new OSCPortOut(sendSocket);
 		} catch (Exception e) {
 			handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
-		}
-	}
-
-	public void setupButtons () {
-		findViewById(R.id.mix1_button).setOnClickListener(v -> selectMix(1));
-		findViewById(R.id.mix2_button).setOnClickListener(v -> selectMix(2));
-		findViewById(R.id.mix3_button).setOnClickListener(v -> selectMix(3));
-		findViewById(R.id.mix4_button).setOnClickListener(v -> selectMix(4));
-		findViewById(R.id.mix5_button).setOnClickListener(v -> selectMix(5));
-		findViewById(R.id.mix6_button).setOnClickListener(v -> selectMix(6));
-	}
-
-	public void setupFaders () {
-		faders.add(findViewById(R.id.fader1));
-		faders.add(findViewById(R.id.fader2));
-		faders.add(findViewById(R.id.fader3));
-		faders.add(findViewById(R.id.fader4));
-		faders.add(findViewById(R.id.fader5));
-		faders.add(findViewById(R.id.fader6));
-		faders.add(findViewById(R.id.fader7));
-		faders.add(findViewById(R.id.fader8));
-		faders.add(findViewById(R.id.fader9));
-		faders.add(findViewById(R.id.fader10));
-		faders.add(findViewById(R.id.fader11));
-		faders.add(findViewById(R.id.fader12));
-		faders.add(findViewById(R.id.fader13));
-		faders.add(findViewById(R.id.fader14));
-		faders.add(findViewById(R.id.fader15));
-		faders.add(findViewById(R.id.fader16));
-
-		/*
-		faders.get(0).setGradientEnd(getApplicationContext().getColor(R.color.mix1));
-		faders.get(0).setGradientStart(getApplicationContext().getColor(R.color.mix1_lighter));
-
-		faders.get(1).setGradientEnd(getApplicationContext().getColor(R.color.mix2));
-		faders.get(1).setGradientStart(getApplicationContext().getColor(R.color.mix2_lighter));
-
-		faders.get(2).setGradientEnd(getApplicationContext().getColor(R.color.mix3));
-		faders.get(2).setGradientStart(getApplicationContext().getColor(R.color.mix3_lighter));
-
-		faders.get(3).setGradientEnd(getApplicationContext().getColor(R.color.mix4));
-		faders.get(3).setGradientStart(getApplicationContext().getColor(R.color.mix4_lighter));
-
-		faders.get(4).setGradientEnd(getApplicationContext().getColor(R.color.mix5));
-		faders.get(4).setGradientStart(getApplicationContext().getColor(R.color.mix5_lighter));
-
-		faders.get(5).setGradientEnd(getApplicationContext().getColor(R.color.mix6));
-		faders.get(5).setGradientStart(getApplicationContext().getColor(R.color.mix6_lighter));
-		 */
-
-		for (BoxedVertical fader: faders) {
-			fader.setOnBoxedPointsChangeListener((boxedPoints, points) -> SendOSCFaderValue(faders.indexOf(fader) + 1, points));
-		}
-	}
-
-	public void selectMix (int mix) {
-		currentMix = mix;
-		SendOSCGetMix(mix);
-		int[] colourArray = getApplicationContext().getResources().getIntArray(R.array.mix_colours);
-		int[] colourArrayLighter = getApplicationContext().getResources().getIntArray(R.array.mix_colours_lighter);
-
-		for (BoxedVertical fader : faders) {
-			fader.setGradientEnd(colourArray[mix - 1]);
-			fader.setGradientStart(colourArrayLighter[mix - 1]);
 		}
 	}
 

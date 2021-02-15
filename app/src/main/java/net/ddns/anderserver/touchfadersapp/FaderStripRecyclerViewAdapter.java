@@ -31,7 +31,6 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
 
     private final int currentMix;
     private final ArrayList<Integer> faderLevels = new ArrayList<>();
-    //private BoxedVertical.OnValuesChangeListener valuesChangeListener;
     private FaderValueChangedListener faderValueChangedListener;
 
     int[] colourArray;
@@ -91,14 +90,21 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
         FaderStripViewHolder(View itemView) {
             super(itemView);
             fader = itemView.findViewById(R.id.fader);
-            fader.setOnBoxedPointsChangeListener((boxedPoints, points) -> faderValueChangedListener.onValueChanged(boxedPoints.getRootView(), position, boxedPoints, points));
+            fader.setOnBoxedPointsChangeListener((boxedPoints, points) -> {
+                faderLevels.set(position, points);
+                faderValueChangedListener.onValueChanged(boxedPoints.getRootView(), position, boxedPoints, points);
+            });
             channelNumber = itemView.findViewById(R.id.channelNumber);
         }
 
         @Override
         public void onValueChanged(View view, int index, BoxedVertical boxedVertical, int points) {
-            faderLevels.set(position, points);
+            if (faderValueChangedListener != null) faderValueChangedListener.onValueChanged(view, index, boxedVertical, points);
         }
+    }
+
+    void setFaderLevel (int index, int level) {
+        faderLevels.set(index, level);
     }
 
     void setValuesChangeListener (FaderValueChangedListener listener) {
