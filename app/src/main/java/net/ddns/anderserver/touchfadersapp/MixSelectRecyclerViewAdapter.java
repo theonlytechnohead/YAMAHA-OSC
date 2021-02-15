@@ -13,32 +13,28 @@ import java.util.List;
 
 public class MixSelectRecyclerViewAdapter extends RecyclerView.Adapter<MixSelectRecyclerViewAdapter.ViewHolder> {
 
-    private List<String> mixData;
-    private LayoutInflater inflator;
+    private List<String> mixNames;
     private MixButtonClickListener clickListener;
 
     MixSelectRecyclerViewAdapter(Context context, List<String> data) {
-        this.inflator = LayoutInflater.from(context);
-        this.mixData = data;
+        this.mixNames = data;
     }
 
     @NonNull
     @Override
     public MixSelectRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflator.inflate(R.layout.recyclerview_mix_selection, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_mix_selection, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MixSelectRecyclerViewAdapter.ViewHolder holder, int position) {
-        String mix = mixData.get(position);
-        //holder.mixTextView.setText(mix);
-        holder.mixSelectButton.setText(mix);
+        holder.mixSelectButton.setText(mixNames.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mixData.size();
+        return mixNames.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -60,8 +56,8 @@ public class MixSelectRecyclerViewAdapter extends RecyclerView.Adapter<MixSelect
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
-        return mixData.get(id);
+    String getMixName(int id) {
+        return mixNames.get(id);
     }
 
     // allows clicks events to be caught

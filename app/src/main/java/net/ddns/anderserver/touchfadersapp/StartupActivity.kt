@@ -17,11 +17,16 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.preference.PreferenceManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import net.ddns.anderserver.touchfadersapp.databinding.StartupBinding
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
 
-class StartupActivity : AppCompatActivity() {
+class StartupActivity : AppCompatActivity(), CoroutineScope {
 
     private var numChannels = 64
     private var numMixes = 6
@@ -30,24 +35,18 @@ class StartupActivity : AppCompatActivity() {
 
     var sharedPreferences: SharedPreferences? = null
 
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = StartupBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        // Making it fullscreen...
-        val actionBar = supportActionBar
-        actionBar?.hide()
-        binding.startupLayout.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
-                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-        // Fullscreen done!
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        checkNetwork()
+
+        //checkNetwork()
         /*
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter() {
@@ -99,6 +98,25 @@ class StartupActivity : AppCompatActivity() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Making it fullscreen...
+        val actionBar = supportActionBar
+        actionBar?.hide()
+        binding.startupLayout.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+        // Fullscreen done!
+        launch {
+            async(Dispatchers.IO) {
+                checkNetwork()
+            }
+        }
+    }
+
     private fun checkNetwork() {
         if (isConnected(applicationContext)) {
             //binding.startButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
@@ -110,7 +128,9 @@ class StartupActivity : AppCompatActivity() {
             }
         } else {
             binding.startButton.setOnClickListener { checkNetwork() }
+            Handler(Looper.getMainLooper()).post {
             Toast.makeText(this, "You're not connected to a network!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

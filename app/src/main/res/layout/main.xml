@@ -198,7 +198,7 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:max="127"
-		app:startValue="111"
+		app:startValue="103"
 		app:textEnabled="false"
 		app:touchDisabled="true"
 		app:gradientStart="@color/meter_start"

@@ -2,6 +2,8 @@ package net.ddns.anderserver.touchfadersapp;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 	OSCPortOut oscPortOut;
 	OSCPortIn oscPortIn;
 	ArrayList<BoxedVertical> faders = new ArrayList<>();
+	RecyclerView recyclerView;
 	FaderStripRecyclerViewAdapter adapter;
 
 	private int numChannels;
@@ -105,9 +109,9 @@ public class MainActivity extends AppCompatActivity {
 		AsyncTask.execute(this::OpenOSCPortIn);
 		AsyncTask.execute(this::OpenOSCPortOut);
 
-		RecyclerView recyclerView = findViewById(R.id.faderRecyclerView);
+		recyclerView = findViewById(R.id.faderRecyclerView);
 		adapter = new FaderStripRecyclerViewAdapter(this, numChannels, currentMix);
-		adapter.setValuesChangeListener((boxedPoints, points) -> SendOSCFaderValue(adapter.getFaderIndex(boxedPoints) + 1, points));
+		adapter.setValuesChangeListener((view, index, boxedVertical, points) -> SendOSCFaderValue(index + 1, points));
 		recyclerView.setAdapter(adapter);
 
 	}
@@ -133,10 +137,8 @@ public class MainActivity extends AppCompatActivity {
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
 			frameLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
 				DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-				//LinearLayout faderLayout = findViewById(R.id.faderLayout);
-				//RecyclerView faderLayoutView = findViewById(R.id.faderRecyclerView);
+				RecyclerView faderLayoutView = findViewById(R.id.faderRecyclerView);
 				BoxedVertical meter = findViewById(R.id.mixMeter);
-				//ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) faderLayoutView.getLayoutParams();
 				ViewGroup.LayoutParams meterParams = meter.getLayoutParams();
 				assert cutout != null;
 				final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
