@@ -38,16 +38,6 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
         numChannels = getIntent().getIntExtra(StartupActivity.EXTRA_NUM_CHANNELS, 64);
         numMixes = getIntent().getIntExtra(StartupActivity.EXTRA_NUM_MIXES, 6);
 
-        // data to populate the RecyclerView with
-        ArrayList<String> mixNames = new ArrayList<>();
-        for (int i = 1; i <= numMixes; i ++) mixNames.add("Mix " + i);
-
-        // set up the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.mix_select_recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MixSelectRecyclerViewAdapter(this, mixNames);
-        adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -68,20 +58,15 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         // Fullscreen done!
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            mixLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-                DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-                RecyclerView mixView = findViewById(R.id.mix_select_recyclerview);
-                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) mixView.getLayoutParams();
-                assert cutout != null;
-                if (cutout.getSafeInsetLeft() == layoutParams.leftMargin) return;
-                layoutParams.leftMargin = cutout.getSafeInsetLeft();
-                layoutParams.rightMargin = cutout.getSafeInsetRight();
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> mixView.setLayoutParams(layoutParams));
-                //Log.i("CUTOUT", "safeLeft: " + cutout.getSafeInsetLeft() + "  safeRight: " + cutout.getSafeInsetRight());
-            });
-        }
+        // data to populate the RecyclerView with
+        ArrayList<String> mixNames = new ArrayList<>();
+        for (int i = 1; i <= numMixes; i ++) mixNames.add("Mix " + i);
+
+        // set up the RecyclerView
+        RecyclerView recyclerView = findViewById(R.id.mix_select_recyclerview);
+        adapter = new MixSelectRecyclerViewAdapter(this, mixNames);
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

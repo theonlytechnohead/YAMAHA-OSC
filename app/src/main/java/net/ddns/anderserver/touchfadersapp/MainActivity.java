@@ -109,11 +109,6 @@ public class MainActivity extends AppCompatActivity {
 		AsyncTask.execute(this::OpenOSCPortIn);
 		AsyncTask.execute(this::OpenOSCPortOut);
 
-		recyclerView = findViewById(R.id.faderRecyclerView);
-		adapter = new FaderStripRecyclerViewAdapter(this, numChannels, currentMix);
-		adapter.setValuesChangeListener((view, index, boxedVertical, points) -> SendOSCFaderValue(index + 1, points));
-		recyclerView.setAdapter(adapter);
-
 	}
 
 	@Override
@@ -133,11 +128,16 @@ public class MainActivity extends AppCompatActivity {
 						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		// Fullscreen done!
+		adapter = new FaderStripRecyclerViewAdapter(this, numChannels, currentMix);
+		adapter.setValuesChangeListener((view, index, boxedVertical, points) -> SendOSCFaderValue(index + 1, points));
+		recyclerView = findViewById(R.id.faderRecyclerView);
+		recyclerView.setAdapter(adapter);
 
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
 			frameLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
 				DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-				RecyclerView faderLayoutView = findViewById(R.id.faderRecyclerView);
+				//RecyclerView faderLayoutView = findViewById(R.id.faderRecyclerView);
+				//RecyclerView faderLayoutView = recyclerView;
 				BoxedVertical meter = findViewById(R.id.mixMeter);
 				ViewGroup.LayoutParams meterParams = meter.getLayoutParams();
 				assert cutout != null;
