@@ -19,12 +19,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import net.ddns.anderserver.touchfadersapp.databinding.StartupBinding
+import java.net.InetAddress
+import java.net.Socket
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 
 class StartupActivity : AppCompatActivity(), CoroutineScope {
 
@@ -121,10 +122,22 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
         if (isConnected(applicationContext)) {
             //binding.startButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
             binding.startButton.setOnClickListener {
-                val intent = Intent(baseContext, MixSelectActivity::class.java)
-                intent.putExtra(EXTRA_NUM_CHANNELS, numChannels)
-                intent.putExtra(EXTRA_NUM_MIXES, numMixes)
-                startActivity(intent)
+                launch {
+                    async(Dispatchers.IO) {
+                        val socket = Socket(InetAddress.getByName(binding.ipEditText.text.toString()), 8873);
+                        var byteArraySend = InetAddress.getByName(binding.ipEditText.text.toString()).address
+                        byteArraySend += android.os.Build.MODEL.encodeToByteArray()
+                        socket.getOutputStream().write(byteArraySend)
+                        val byteArrayReceive = ByteArray(socket.receiveBufferSize)
+                        val bytesRead = socket.getInputStream().read(byteArrayReceive, 0, socket.receiveBufferSize)
+                        //Log.i("TCP", byteArrayReceive.toHexString(bytesRead))
+                        socket.close()
+                        val intent = Intent(it.context, MixSelectActivity::class.java)
+                        intent.putExtra(EXTRA_NUM_CHANNELS, numChannels)
+                        intent.putExtra(EXTRA_NUM_MIXES, numMixes)
+                        startActivity(intent)
+                    }
+                }
             }
         } else {
             binding.startButton.setOnClickListener { checkNetwork() }
@@ -137,6 +150,12 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
     companion object {
         const val EXTRA_NUM_CHANNELS = "EXTRA_NUM_CHANNELS"
         const val EXTRA_NUM_MIXES = "EXTRA_NUM_MIXES"
+
+        fun ByteArray.toHexString(length: Int) : String {
+            return this.joinToString("", limit = length) {
+                java.lang.String.format("%02x ", it)
+            }
+        }
 
         fun isConnected(context: Context): Boolean {
             val connectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
