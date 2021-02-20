@@ -2,8 +2,6 @@ package net.ddns.anderserver.touchfadersapp;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,13 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
 
 import com.illposed.osc.OSCBadDataEvent;
 import com.illposed.osc.OSCBundle;
@@ -34,17 +29,17 @@ import com.illposed.osc.transport.udp.OSCPortOut;
 
 import java.io.IOException;
 import java.net.BindException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -59,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 	ArrayList<BoxedVertical> faders = new ArrayList<>();
 	RecyclerView recyclerView;
 	FaderStripRecyclerViewAdapter adapter;
+	BoxedVertical mixMeter;
 
 	private int numChannels;
 	private int currentMix;
@@ -74,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
 					int faderIndex = Integer.parseInt(segments[2].replaceAll("\\D+", "")) - 1; // extract only digits via RegEx
 					if (0 <= faderIndex && faderIndex < adapter.getItemCount()) {
 						adapter.setFaderLevel(faderIndex, (int) message.getArguments().get(0));
-						adapter.notifyDataSetChanged();
+						Handler handler = new Handler(getMainLooper());
+						handler.post(() -> adapter.notifyDataSetChanged());
 					}
 				}
 			}
@@ -108,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
 
 		AsyncTask.execute(this::OpenOSCPortIn);
 		AsyncTask.execute(this::OpenOSCPortOut);
+
+		mixMeter = findViewById(R.id.mixMeter);
+
+		new Thread(new ClientListen()).start();
 	}
 
 	@Override
@@ -171,6 +172,27 @@ public class MainActivity extends AppCompatActivity {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static String getBroadcast() {
+		String found_bcast_address = null;
+		System.setProperty("java.net.preferIPv4Stack", "true");
+		try {
+			Enumeration<NetworkInterface> niEnum = NetworkInterface.getNetworkInterfaces();
+			while (niEnum.hasMoreElements()) {
+				NetworkInterface ni = niEnum.nextElement();
+				if (!ni.isLoopback()) {
+					for (InterfaceAddress interfaceAddress : ni.getInterfaceAddresses()) {
+						found_bcast_address = interfaceAddress.getBroadcast().toString();
+						found_bcast_address = found_bcast_address.substring(1);
+					}
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+
+		return found_bcast_address;
 	}
 
 	private void OpenOSCPortIn () {
@@ -258,6 +280,38 @@ public class MainActivity extends AppCompatActivity {
 				}
 			}
 		});
+	}
+
+	public class ClientListen implements Runnable {
+		@Override
+		public void run() {
+			Handler handler = new Handler(Looper.getMainLooper());
+			DatagramSocket socket = null;
+			boolean run = true;
+			while (run) {
+				try {
+					byte[] recvBuf = new byte[16];
+					if (socket == null) {
+						socket = new DatagramSocket(8874);
+						socket.setBroadcast(true);
+					}
+					if (socket.isClosed()) {
+						socket = new DatagramSocket(8874);
+						socket.setBroadcast(true);
+					}
+					DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
+					socket.receive(packet);
+					//String senderIP = packet.getAddress().getHostAddress();
+
+					byte[] meteringData = packet.getData();
+					byte meter = meteringData[currentMix - 1];
+					handler.post(() -> mixMeter.setValue(meter));
+				} catch (IOException e) {
+					Log.e("UDP client has IOException", "error: ", e);
+					run = false;
+				}
+			}
+		}
 	}
 
 }
