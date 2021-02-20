@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
 	OSCPortOut oscPortOut;
 	OSCPortIn oscPortIn;
+	Thread udpListenerThread;
+	boolean runUDP = true;
+
 	ArrayList<BoxedVertical> faders = new ArrayList<>();
 	RecyclerView recyclerView;
 	FaderStripRecyclerViewAdapter adapter;
@@ -108,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
 		mixMeter = findViewById(R.id.mixMeter);
 
-		new Thread(new ClientListen()).start();
+		udpListenerThread = new Thread(new ClientListen());
 	}
 
 	@Override
@@ -133,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
 		recyclerView = findViewById(R.id.faderRecyclerView);
 		recyclerView.setAdapter(adapter);
 
+		udpListenerThread.start();
+
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
 			frameLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
 				DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
@@ -155,6 +160,12 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		runUDP = false;
+	}
+
 	private String GetLocalIP () {
 		try {
 			String localAddress = "";
@@ -174,26 +185,6 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
-	public static String getBroadcast() {
-		String found_bcast_address = null;
-		System.setProperty("java.net.preferIPv4Stack", "true");
-		try {
-			Enumeration<NetworkInterface> niEnum = NetworkInterface.getNetworkInterfaces();
-			while (niEnum.hasMoreElements()) {
-				NetworkInterface ni = niEnum.nextElement();
-				if (!ni.isLoopback()) {
-					for (InterfaceAddress interfaceAddress : ni.getInterfaceAddresses()) {
-						found_bcast_address = interfaceAddress.getBroadcast().toString();
-						found_bcast_address = found_bcast_address.substring(1);
-					}
-				}
-			}
-		} catch (SocketException e) {
-			e.printStackTrace();
-		}
-
-		return found_bcast_address;
-	}
 
 	private void OpenOSCPortIn () {
 		Handler handler = new Handler(Looper.getMainLooper());
@@ -287,8 +278,8 @@ public class MainActivity extends AppCompatActivity {
 		public void run() {
 			Handler handler = new Handler(Looper.getMainLooper());
 			DatagramSocket socket = null;
-			boolean run = true;
-			while (run) {
+
+			while (runUDP) {
 				try {
 					byte[] recvBuf = new byte[16];
 					if (socket == null) {
@@ -308,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
 					handler.post(() -> mixMeter.setValue(meter));
 				} catch (IOException e) {
 					Log.e("UDP client has IOException", "error: ", e);
-					run = false;
+					runUDP = false;
 				}
 			}
 		}
