@@ -60,8 +60,12 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
     public void onBindViewHolder(@NonNull FaderStripViewHolder holder, int position) {
         holder.position = position;
         holder.fader.setValue(faderLevels.get(position));
-        holder.fader.setGradientEnd(colourArray[currentMix - 1]);
-        holder.fader.setGradientStart(colourArrayLighter[currentMix - 1]);
+        if (currentMix <= colourArray.length) {
+            holder.fader.setGradientEnd(colourArray[currentMix - 1]);
+        }
+        if (currentMix <= colourArrayLighter.length) {
+            holder.fader.setGradientStart(colourArrayLighter[currentMix - 1]);
+        }
         String number = String.valueOf((position + 1));
         holder.channelNumber.setText(number);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {

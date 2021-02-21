@@ -26,7 +26,6 @@ import android.view.View;
 
 import androidx.core.content.ContextCompat;
 
-
 import org.junit.Assert;
 
 import static java.lang.Math.abs;
@@ -89,6 +88,7 @@ public class BoxedVertical extends View{
     private boolean touchAllowed = true;
 
     private float mProgressSweep = 0;
+    private float lastProgressSweep = 0;
 
     private final Paint drawPaint = new Paint();
     private final Path clippingPath = new Path();
@@ -208,17 +208,17 @@ public class BoxedVertical extends View{
         canvas.drawRect(0, 0, getWidth(), getHeight(), drawPaint);
 
         if (mPoints >= 0.95f * mMax) {
-            if (nearClipGradient == null) {
+            if (nearClipGradient == null || lastProgressSweep != mProgressSweep) {
                 nearClipGradient = new LinearGradient(0, mProgressSweep, 0, getHeight(), ContextCompat.getColor(getContext(), R.color.red), gradientStart, Shader.TileMode.MIRROR);
             }
             drawPaint.setShader(nearClipGradient);
         } else if (0.8f * mMax <= mPoints && mPoints < 0.95f * mMax) {
-            if (overUnityGradient == null) {
+            if (overUnityGradient == null || lastProgressSweep != mProgressSweep) {
                 overUnityGradient = new LinearGradient(0, mProgressSweep, 0, getHeight(), ContextCompat.getColor(getContext(), R.color.yellow), gradientStart, Shader.TileMode.MIRROR);
             }
             drawPaint.setShader(overUnityGradient);
         } else {
-            if (normalGradient == null) {
+            if (normalGradient == null || lastProgressSweep != mProgressSweep) {
                 normalGradient = new LinearGradient(0, mProgressSweep, 0, getHeight(), gradientEnd, gradientStart, Shader.TileMode.MIRROR);
             }
             drawPaint.setShader(normalGradient);
@@ -251,6 +251,7 @@ public class BoxedVertical extends View{
                 drawText(canvas, mTextPaint, strPoint);
             }
         }
+        lastProgressSweep = mProgressSweep;
     }
 
     private void drawText(Canvas canvas, Paint paint, String text) {
