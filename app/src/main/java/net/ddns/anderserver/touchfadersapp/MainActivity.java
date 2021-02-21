@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
 		recyclerView = findViewById(R.id.faderRecyclerView);
 		recyclerView.setAdapter(adapter);
 
+		SendOSCGetMix(currentMix);
+
 		udpListenerThread.start();
 
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
