@@ -37,6 +37,7 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -226,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 		Handler handler = new Handler(Looper.getMainLooper());
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-		String oscIP = sharedPreferences.getString("ipAddress", "192.168.1.2");
+		String oscIP = sharedPreferences.getString(StartupActivity.IP_ADDRESS_PREFERENCES, "192.168.1.2");
 		int oscSendPort = sharedPreferences.getInt("sendPort", 8000 + sendPort);
 		SocketAddress sendSocket = new InetSocketAddress(oscIP, oscSendPort);
 
@@ -302,6 +303,8 @@ public class MainActivity extends AppCompatActivity {
 					byte[] meteringData = packet.getData();
 					byte meter = meteringData[currentMix - 1];
 					handler.post(() -> mixMeter.setValue(meter));
+				} catch (SocketTimeoutException e) {
+					// Nothing really to do here
 				} catch (IOException e) {
 					Log.e("UDP client has IOException", "error: ", e);
 					runUDP = false;

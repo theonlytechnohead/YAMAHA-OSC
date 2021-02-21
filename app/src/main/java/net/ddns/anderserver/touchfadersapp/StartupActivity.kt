@@ -10,7 +10,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -29,9 +28,6 @@ import kotlin.coroutines.CoroutineContext
 
 class StartupActivity : AppCompatActivity(), CoroutineScope {
 
-    private var numChannels = 64
-    private var numMixes = 6
-
     private lateinit var binding: StartupBinding
 
     var sharedPreferences: SharedPreferences? = null
@@ -47,7 +43,6 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
-        //checkNetwork()
         /*
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter() {
@@ -79,10 +74,10 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
         binding.ipEditText.setText(sharedPreferences?.getString("ipAddress", "192.168.1.2"))
         binding.ipEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
-                val view = this.currentFocus
-                if (view != null) {
+                val currentView = this.currentFocus
+                if (currentView != null) {
                     val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(view.windowToken, 0)
+                    imm.hideSoftInputFromWindow(currentView.windowToken, 0)
                 }
                 val handler = Handler(Looper.getMainLooper())
                 handler.post { binding.startButton.performClick() }
@@ -94,7 +89,7 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                sharedPreferences?.edit()?.putString("ipAddress", s.toString())?.apply()
+                sharedPreferences?.edit()?.putString(IP_ADDRESS_PREFERENCES, s.toString())?.apply()
             }
         })
     }
@@ -120,7 +115,6 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
 
     private fun checkNetwork() {
         if (isConnected(applicationContext)) {
-            //binding.startButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
             binding.startButton.setOnClickListener {
                 launch {
                     async(Dispatchers.IO) {
@@ -132,13 +126,12 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
                             socket.soTimeout = 100;
                             var byteArraySend = InetAddress.getByName(getLocalIP()).address
                             byteArraySend += android.os.Build.MODEL.encodeToByteArray()
-                            Log.i("TCP", "Write...")
                             socket.getOutputStream().write(byteArraySend)
                             val byteArrayReceive = ByteArray(socket.receiveBufferSize)
-                            Log.i("TCP", "Reading...")
-                            val bytesRead = socket.getInputStream().read(byteArrayReceive, 0, socket.receiveBufferSize)
-                            Log.i("TCP", byteArrayReceive.toHexString(bytesRead))
+                            socket.getInputStream().read(byteArrayReceive, 0, socket.receiveBufferSize)
+                            //Log.i("TCP", byteArrayReceive.toHexString(bytesRead))
                             socket.close()
+
                             val intent = Intent(it.context, MixSelectActivity::class.java)
                             intent.putExtra(EXTRA_RECEIVE_PORT, byteArrayReceive[0])
                             intent.putExtra(EXTRA_SEND_PORT, byteArrayReceive[1])
@@ -163,6 +156,8 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
     }
 
     companion object {
+        const val IP_ADDRESS_PREFERENCES = "ipAddress"
+
         const val EXTRA_RECEIVE_PORT = "EXTRA_RECEIVE_PORT"
         const val EXTRA_SEND_PORT = "EXTRA_SEND_PORT"
         const val EXTRA_NUM_CHANNELS = "EXTRA_NUM_CHANNELS"
