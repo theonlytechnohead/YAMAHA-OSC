@@ -24,8 +24,10 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
 
     public static String EXTRA_MIX_INDEX = "EXTRA_MIX_INDEX";
 
-    private int numChannels;
-    private int numMixes;
+    private byte receivePort;
+    private byte sendPort;
+    private byte numChannels;
+    private byte numMixes;
 
     MixSelectRecyclerViewAdapter adapter;
 
@@ -35,8 +37,10 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
 
         setContentView(R.layout.mix_selection);
 
-        numChannels = getIntent().getIntExtra(StartupActivity.EXTRA_NUM_CHANNELS, 64);
-        numMixes = getIntent().getIntExtra(StartupActivity.EXTRA_NUM_MIXES, 6);
+        receivePort = getIntent().getByteExtra(StartupActivity.EXTRA_RECEIVE_PORT, (byte) 0x0);
+        sendPort = getIntent().getByteExtra(StartupActivity.EXTRA_SEND_PORT, (byte) 0x0);
+        numChannels = getIntent().getByteExtra(StartupActivity.EXTRA_NUM_CHANNELS, (byte) 0x40);
+        numMixes = getIntent().getByteExtra(StartupActivity.EXTRA_NUM_MIXES, (byte) 0x6);
 
     }
 
@@ -74,6 +78,8 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
         int mix = index + 1;
         //Toast.makeText(this, "You clicked " + adapter.getItem(index) + " which is mix " + mix, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        intent.putExtra(StartupActivity.EXTRA_RECEIVE_PORT, receivePort);
+        intent.putExtra(StartupActivity.EXTRA_SEND_PORT, sendPort);
         intent.putExtra(StartupActivity.EXTRA_NUM_CHANNELS, numChannels);
         intent.putExtra(MixSelectActivity.EXTRA_MIX_INDEX, index);
         startActivity(intent);

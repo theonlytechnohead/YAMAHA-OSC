@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -23,8 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.ddns.anderserver.touchfadersapp.databinding.StartupBinding
-import java.net.InetAddress
-import java.net.Socket
+import java.net.*
 import kotlin.coroutines.CoroutineContext
 
 class StartupActivity : AppCompatActivity(), CoroutineScope {
@@ -124,18 +124,33 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
             binding.startButton.setOnClickListener {
                 launch {
                     async(Dispatchers.IO) {
-                        val socket = Socket(InetAddress.getByName(binding.ipEditText.text.toString()), 8873);
-                        var byteArraySend = InetAddress.getByName(binding.ipEditText.text.toString()).address
-                        byteArraySend += android.os.Build.MODEL.encodeToByteArray()
-                        socket.getOutputStream().write(byteArraySend)
-                        val byteArrayReceive = ByteArray(socket.receiveBufferSize)
-                        val bytesRead = socket.getInputStream().read(byteArrayReceive, 0, socket.receiveBufferSize)
-                        //Log.i("TCP", byteArrayReceive.toHexString(bytesRead))
-                        socket.close()
-                        val intent = Intent(it.context, MixSelectActivity::class.java)
-                        intent.putExtra(EXTRA_NUM_CHANNELS, numChannels)
-                        intent.putExtra(EXTRA_NUM_MIXES, numMixes)
-                        startActivity(intent)
+                        try {
+                            val targetAddress: InetAddress = InetAddress.getByName(binding.ipEditText.text.toString())
+                            val socketAddress = InetSocketAddress(targetAddress, 8873)
+                            val socket = Socket();
+                            socket.connect(socketAddress, 100);
+                            socket.soTimeout = 100;
+                            var byteArraySend = InetAddress.getByName(getLocalIP()).address
+                            byteArraySend += android.os.Build.MODEL.encodeToByteArray()
+                            Log.i("TCP", "Write...")
+                            socket.getOutputStream().write(byteArraySend)
+                            val byteArrayReceive = ByteArray(socket.receiveBufferSize)
+                            Log.i("TCP", "Reading...")
+                            val bytesRead = socket.getInputStream().read(byteArrayReceive, 0, socket.receiveBufferSize)
+                            Log.i("TCP", byteArrayReceive.toHexString(bytesRead))
+                            socket.close()
+                            val intent = Intent(it.context, MixSelectActivity::class.java)
+                            intent.putExtra(EXTRA_RECEIVE_PORT, byteArrayReceive[0])
+                            intent.putExtra(EXTRA_SEND_PORT, byteArrayReceive[1])
+                            intent.putExtra(EXTRA_NUM_CHANNELS, byteArrayReceive[2])
+                            intent.putExtra(EXTRA_NUM_MIXES, byteArrayReceive[(3)])
+                            startActivity(intent)
+                        } catch (e: SocketTimeoutException) {
+                            Handler(Looper.getMainLooper()).post {
+                                Toast.makeText(applicationContext, "No response...", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
                     }
                 }
             }
@@ -148,12 +163,35 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
     }
 
     companion object {
+        const val EXTRA_RECEIVE_PORT = "EXTRA_RECEIVE_PORT"
+        const val EXTRA_SEND_PORT = "EXTRA_SEND_PORT"
         const val EXTRA_NUM_CHANNELS = "EXTRA_NUM_CHANNELS"
         const val EXTRA_NUM_MIXES = "EXTRA_NUM_MIXES"
 
         fun ByteArray.toHexString(length: Int) : String {
             return this.joinToString("", limit = length) {
                 java.lang.String.format("%02x ", it)
+            }
+        }
+
+        private fun getLocalIP(): String? {
+            return try {
+                var localAddress = ""
+                val en = NetworkInterface.getNetworkInterfaces()
+                while (en.hasMoreElements()) {
+                    val networkInterface = en.nextElement()
+                    val enumIpAddr = networkInterface.inetAddresses
+                    while (enumIpAddr.hasMoreElements()) {
+                        val inetAddress = enumIpAddr.nextElement()
+                        if (!inetAddress.isLinkLocalAddress) {
+                            localAddress = inetAddress.hostAddress
+                        }
+                    }
+                }
+                localAddress
+            } catch (e: SocketException) {
+                e.printStackTrace()
+                null
             }
         }
 

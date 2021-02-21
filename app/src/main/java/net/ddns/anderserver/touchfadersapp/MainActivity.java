@@ -59,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
 	FaderStripRecyclerViewAdapter adapter;
 	BoxedVertical mixMeter;
 
-	private int numChannels;
+	private byte receivePort;
+	private byte sendPort;
+	private byte numChannels;
 	private int currentMix;
 
 	OSCPacketListener packetListener = new OSCPacketListener() {
@@ -101,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
 
 		//BasicConfigurator.configure();
 
-		numChannels = getIntent().getIntExtra(StartupActivity.EXTRA_NUM_CHANNELS, 64);
+		receivePort = getIntent().getByteExtra(StartupActivity.EXTRA_RECEIVE_PORT, (byte) 0x0);
+		sendPort = getIntent().getByteExtra(StartupActivity.EXTRA_SEND_PORT, (byte) 0x0);
+		numChannels = getIntent().getByteExtra(StartupActivity.EXTRA_NUM_CHANNELS, (byte) 0x40);
 		currentMix = getIntent().getIntExtra(MixSelectActivity.EXTRA_MIX_INDEX, 0) + 1;
 
 		setContentView(R.layout.main);
@@ -185,13 +189,12 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
-
 	private void OpenOSCPortIn () {
 		Handler handler = new Handler(Looper.getMainLooper());
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		String localAddress = GetLocalIP();
-		int oscReceivePort = sharedPreferences.getInt("receivePort", 9001);
+		int oscReceivePort = sharedPreferences.getInt("receivePort", 9000 + receivePort);
 		SocketAddress receiveSocket = new InetSocketAddress(localAddress, oscReceivePort);
 
 		try {
@@ -224,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		String oscIP = sharedPreferences.getString("ipAddress", "192.168.1.2");
-		int oscSendPort = sharedPreferences.getInt("sendPort", 8001);
+		int oscSendPort = sharedPreferences.getInt("sendPort", 8000 + sendPort);
 		SocketAddress sendSocket = new InetSocketAddress(oscIP, oscSendPort);
 
 		try {
@@ -284,10 +287,12 @@ public class MainActivity extends AppCompatActivity {
 					byte[] recvBuf = new byte[16];
 					if (socket == null) {
 						socket = new DatagramSocket(8874);
+						socket.setSoTimeout(100);
 						socket.setBroadcast(true);
 					}
 					if (socket.isClosed()) {
 						socket = new DatagramSocket(8874);
+						socket.setSoTimeout(100);
 						socket.setBroadcast(true);
 					}
 					DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);

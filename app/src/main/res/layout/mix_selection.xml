@@ -12,7 +12,9 @@
         android:id="@+id/mix_select_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:itemCount="16"
         tools:listitem="@layout/recyclerview_mix_selection"/>
 
 </LinearLayout>
