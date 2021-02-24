@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.illposed.osc.OSCBadDataEvent;
@@ -33,12 +32,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 	FaderStripRecyclerViewAdapter adapter;
 	BoxedVertical mixMeter;
 
+	private String ipAddress;
 	private byte receivePort;
 	private byte sendPort;
 	private byte numChannels;
@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
 		//BasicConfigurator.configure();
 
+		ipAddress = getIntent().getStringExtra(StartupActivity.EXTRA_IP_ADDRESS);
 		receivePort = getIntent().getByteExtra(StartupActivity.EXTRA_RECEIVE_PORT, (byte) 0x0);
 		sendPort = getIntent().getByteExtra(StartupActivity.EXTRA_SEND_PORT, (byte) 0x0);
 		numChannels = getIntent().getByteExtra(StartupActivity.EXTRA_NUM_CHANNELS, (byte) 0x40);
@@ -193,16 +194,10 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void OpenOSCPortIn () {
-		Handler handler = new Handler(Looper.getMainLooper());
-		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-		String localAddress = GetLocalIP();
-		int oscReceivePort = sharedPreferences.getInt("receivePort", 9000 + receivePort);
-		SocketAddress receiveSocket = new InetSocketAddress(localAddress, oscReceivePort);
-
 		try {
-			oscPortIn = new OSCPortIn(receiveSocket);
+			oscPortIn = new OSCPortIn(new InetSocketAddress(GetLocalIP(), 9000 + receivePort));
 		} catch (BindException e) {
+			Handler handler = new Handler(Looper.getMainLooper());
 			handler.post(() -> Toast.makeText(getApplicationContext(), "Failed to bind IP to OSC!", Toast.LENGTH_SHORT).show());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -226,17 +221,11 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void OpenOSCPortOut () {
-		Handler handler = new Handler(Looper.getMainLooper());
-		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-		String oscIP = sharedPreferences.getString(StartupActivity.IP_ADDRESS_PREFERENCES, "192.168.1.2");
-		int oscSendPort = sharedPreferences.getInt("sendPort", 8000 + sendPort);
-		SocketAddress sendSocket = new InetSocketAddress(oscIP, oscSendPort);
-
 		try {
-			oscPortOut = new OSCPortOut(sendSocket);
+			oscPortOut = new OSCPortOut(new InetSocketAddress(InetAddress.getByName(ipAddress), 8000 + sendPort));
 		} catch (Exception e) {
-			handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
+			Handler handler = new Handler(Looper.getMainLooper());
+			handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show());
 		}
 	}
 
@@ -252,11 +241,12 @@ public class MainActivity extends AppCompatActivity {
 				try {
 					oscPortOut.send(message);
 					Thread.sleep(5);
-					//Log.i("OSC message", message.getAddress() + " : " + message.getArguments().get(0).toString());
+					handler.post(() -> Log.i("OSC message", message.getAddress() + " : " + message.getArguments().get(0).toString()));
 				} catch (Exception e) {
 					handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
 				}
 			}
+			handler.post(() -> Toast.makeText(getApplicationContext(), "OSC port out was null", Toast.LENGTH_SHORT).show());
 		});
 	}
 
@@ -271,8 +261,9 @@ public class MainActivity extends AppCompatActivity {
 
 				try {
 					oscPortOut.send(message);
-					//Log.i("OSC message", message.getAddress() + " : " + message.getArguments().get(0).toString());
+					//handler.post(() -> Log.i("OSC message", ipAddress.toString() + ":" + sendPort + " " + message.getAddress() + " : " + message.getArguments().get(0).toString()));
 				} catch (Exception e) {
+					//handler.post(() -> Log.e("OSC mix error", e.toString()));
 					handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
 				}
 			}

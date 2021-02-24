@@ -118,10 +118,10 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
         // Fullscreen done!
         launch(Dispatchers.IO) {
-            checkNetwork()
+            UDPListener();
         }
         launch(Dispatchers.IO) {
-            UDPListener();
+            checkNetwork()
         }
     }
 
@@ -129,6 +129,8 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
         super.onPause()
         listenUDP = false;
     }
+
+
 
     private fun checkNetwork() {
         if (isConnected(applicationContext)) {
@@ -150,6 +152,7 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
                             socket.close()
 
                             val intent = Intent(it.context, MixSelectActivity::class.java)
+                            intent.putExtra(EXTRA_IP_ADDRESS, binding.ipEditText.text.toString())
                             intent.putExtra(EXTRA_RECEIVE_PORT, byteArrayReceive[0])
                             intent.putExtra(EXTRA_SEND_PORT, byteArrayReceive[1])
                             intent.putExtra(EXTRA_NUM_CHANNELS, byteArrayReceive[2])
@@ -174,14 +177,14 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
 
     private fun UDPListener() {
         val handler = Handler(Looper.getMainLooper())
-        var socket = DatagramSocket(8879)
+        var socket = DatagramSocket(8877)
         socket.soTimeout = 100;
         socket.broadcast = true
         while (listenUDP) {
             try {
                 val recvBuf = ByteArray(socket.receiveBufferSize)
                 if (socket.isClosed) {
-                    socket = DatagramSocket(8879)
+                    socket = DatagramSocket(8877)
                     socket.soTimeout = 100
                     socket.broadcast = true
                 }
@@ -211,6 +214,7 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
             val name = deviceNames[index]
             val ip = devices[name]
             if (ip != null) {
+                //Toast.makeText(applicationContext, "Connecting to " + name + " at " + ip.toString(), Toast.LENGTH_SHORT).show()
                 connect(ip)
             }
         }
@@ -228,11 +232,12 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
                     byteArraySend += android.os.Build.MODEL.encodeToByteArray()
                     socket.getOutputStream().write(byteArraySend)
                     val byteArrayReceive = ByteArray(socket.receiveBufferSize)
-                    socket.getInputStream().read(byteArrayReceive, 0, socket.receiveBufferSize)
+                    val bytesRead = socket.getInputStream().read(byteArrayReceive, 0, socket.receiveBufferSize)
                     //Log.i("TCP", byteArrayReceive.toHexString(bytesRead))
                     socket.close()
 
                     val intent = Intent(applicationContext, MixSelectActivity::class.java)
+                    intent.putExtra(EXTRA_IP_ADDRESS, address.toString().trim('/'))
                     intent.putExtra(EXTRA_RECEIVE_PORT, byteArrayReceive[0])
                     intent.putExtra(EXTRA_SEND_PORT, byteArrayReceive[1])
                     intent.putExtra(EXTRA_NUM_CHANNELS, byteArrayReceive[2])
@@ -256,6 +261,7 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
     companion object {
         const val IP_ADDRESS_PREFERENCES = "ipAddress"
 
+        const val EXTRA_IP_ADDRESS = "EXTRA_IP_ADDRESS"
         const val EXTRA_RECEIVE_PORT = "EXTRA_RECEIVE_PORT"
         const val EXTRA_SEND_PORT = "EXTRA_SEND_PORT"
         const val EXTRA_NUM_CHANNELS = "EXTRA_NUM_CHANNELS"

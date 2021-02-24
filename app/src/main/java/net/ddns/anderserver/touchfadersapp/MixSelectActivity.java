@@ -1,29 +1,28 @@
 package net.ddns.anderserver.touchfadersapp;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.DisplayCutout;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class MixSelectActivity extends AppCompatActivity implements MixSelectRecyclerViewAdapter.MixButtonClickListener {
 
     public static String EXTRA_MIX_INDEX = "EXTRA_MIX_INDEX";
 
+    private String ipAddress;
     private byte receivePort;
     private byte sendPort;
     private byte numChannels;
@@ -37,6 +36,7 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
 
         setContentView(R.layout.mix_selection);
 
+        ipAddress = getIntent().getStringExtra(StartupActivity.EXTRA_IP_ADDRESS);
         receivePort = getIntent().getByteExtra(StartupActivity.EXTRA_RECEIVE_PORT, (byte) 0x0);
         sendPort = getIntent().getByteExtra(StartupActivity.EXTRA_SEND_PORT, (byte) 0x0);
         numChannels = getIntent().getByteExtra(StartupActivity.EXTRA_NUM_CHANNELS, (byte) 0x40);
@@ -78,10 +78,37 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
         int mix = index + 1;
         //Toast.makeText(this, "You clicked " + adapter.getItem(index) + " which is mix " + mix, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        intent.putExtra(StartupActivity.EXTRA_IP_ADDRESS, ipAddress);
         intent.putExtra(StartupActivity.EXTRA_RECEIVE_PORT, receivePort);
         intent.putExtra(StartupActivity.EXTRA_SEND_PORT, sendPort);
         intent.putExtra(StartupActivity.EXTRA_NUM_CHANNELS, numChannels);
         intent.putExtra(MixSelectActivity.EXTRA_MIX_INDEX, index);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Disconnect();
+    }
+
+    private void Disconnect() {
+        AsyncTask.execute(() -> {
+            byte[] data = Build.MODEL.getBytes();
+            InetAddress address = null;
+            try {
+                address = InetAddress.getByName(ipAddress);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            DatagramPacket packet = new DatagramPacket(data, data.length, address, 8878);
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                socket.send(packet);
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
