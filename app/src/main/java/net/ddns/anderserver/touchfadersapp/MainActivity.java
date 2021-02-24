@@ -143,8 +143,11 @@ public class MainActivity extends AppCompatActivity {
 		recyclerView = findViewById(R.id.faderRecyclerView);
 		recyclerView.setAdapter(adapter);
 
+		runUDP = true;
+		if (udpListenerThread.getState() != Thread.State.NEW) {
+			udpListenerThread.start();
+		}
 		SendOSCGetMix(currentMix);
-		udpListenerThread.start();
 
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
 			frameLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -246,7 +249,6 @@ public class MainActivity extends AppCompatActivity {
 					handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
 				}
 			}
-			handler.post(() -> Toast.makeText(getApplicationContext(), "OSC port out was null", Toast.LENGTH_SHORT).show());
 		});
 	}
 

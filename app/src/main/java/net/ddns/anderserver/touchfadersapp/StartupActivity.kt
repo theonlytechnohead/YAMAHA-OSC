@@ -130,8 +130,6 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
         listenUDP = false;
     }
 
-
-
     private fun checkNetwork() {
         if (isConnected(applicationContext)) {
             binding.startButton.setOnClickListener {

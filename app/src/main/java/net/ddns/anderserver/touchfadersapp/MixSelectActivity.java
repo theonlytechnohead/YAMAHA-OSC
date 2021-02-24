@@ -30,6 +30,8 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
 
     MixSelectRecyclerViewAdapter adapter;
 
+    private boolean disconnect = true;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,8 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         // Fullscreen done!
 
+        disconnect = true;
+
         // data to populate the RecyclerView with
         ArrayList<String> mixNames = new ArrayList<>();
         for (int i = 1; i <= numMixes; i ++) mixNames.add("Mix " + i);
@@ -75,6 +79,7 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
 
     @Override
     public void onItemClick(View view, int index) {
+        disconnect = false;
         int mix = index + 1;
         //Toast.makeText(this, "You clicked " + adapter.getItem(index) + " which is mix " + mix, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
@@ -89,7 +94,7 @@ public class MixSelectActivity extends AppCompatActivity implements MixSelectRec
     @Override
     protected void onStop() {
         super.onStop();
-        Disconnect();
+        if (disconnect) Disconnect();
     }
 
     private void Disconnect() {
