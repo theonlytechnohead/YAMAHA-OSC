@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -23,14 +24,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.ddns.anderserver.touchfadersapp.databinding.StartupBinding
+import java.io.IOException
 import java.net.*
 import kotlin.coroutines.CoroutineContext
 
 class StartupActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var binding: StartupBinding
+    private lateinit var adapter: DeviceSelectRecyclerViewAdapter
+    private var deviceNames: MutableList<String> = mutableListOf()
+    private val devices: HashMap<String, InetAddress> = hashMapOf()
 
     var sharedPreferences: SharedPreferences? = null
+
+    var listenUDP = true
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
@@ -92,6 +99,10 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
                 sharedPreferences?.edit()?.putString(IP_ADDRESS_PREFERENCES, s.toString())?.apply()
             }
         })
+
+        adapter = DeviceSelectRecyclerViewAdapter(applicationContext, deviceNames)
+        adapter.setClickListener(clickListener)
+        binding.deviceRecyclerView.adapter = adapter
     }
 
     override fun onResume() {
@@ -106,11 +117,17 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
         // Fullscreen done!
-        launch {
-            async(Dispatchers.IO) {
-                checkNetwork()
-            }
+        launch(Dispatchers.IO) {
+            checkNetwork()
         }
+        launch(Dispatchers.IO) {
+            UDPListener();
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        listenUDP = false;
     }
 
     private fun checkNetwork() {
@@ -120,7 +137,7 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
                     async(Dispatchers.IO) {
                         try {
                             val targetAddress: InetAddress = InetAddress.getByName(binding.ipEditText.text.toString())
-                            val socketAddress = InetSocketAddress(targetAddress, 8873)
+                            val socketAddress = InetSocketAddress(targetAddress, 8878)
                             val socket = Socket();
                             socket.connect(socketAddress, 100);
                             socket.soTimeout = 100;
@@ -151,6 +168,87 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
             binding.startButton.setOnClickListener { checkNetwork() }
             Handler(Looper.getMainLooper()).post {
             Toast.makeText(this, "You're not connected to a network!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun UDPListener() {
+        val handler = Handler(Looper.getMainLooper())
+        var socket = DatagramSocket(8879)
+        socket.soTimeout = 100;
+        socket.broadcast = true
+        while (listenUDP) {
+            try {
+                val recvBuf = ByteArray(socket.receiveBufferSize)
+                if (socket.isClosed) {
+                    socket = DatagramSocket(8879)
+                    socket.soTimeout = 100
+                    socket.broadcast = true
+                }
+                val packet = DatagramPacket(recvBuf, recvBuf.size)
+                socket.receive(packet)
+                val length = packet.length
+                val senderIP = packet.address.hostAddress;
+                val senderName = String(recvBuf.copyOfRange(3, length - 1))
+                //Log.i("UDP", senderName)
+                handler.post { adapter.addDevice(senderName) }
+                if (!devices.containsKey(senderName)) {
+                    devices[senderName] = InetAddress.getByName(senderIP)
+                }
+                //Log.i("UDP", senderIP)
+            } catch (e: SocketTimeoutException) {
+                // Nothing really to do here
+            } catch (e: IOException) {
+                Log.e("UDP client has IOException", "error: ", e)
+                listenUDP = false
+            }
+        }
+        socket.close()
+    }
+
+    private val clickListener = object: DeviceSelectRecyclerViewAdapter.DeviceButtonClickListener {
+        override fun onItemClick(view: View?, index: Int) {
+            val name = deviceNames[index]
+            val ip = devices[name]
+            if (ip != null) {
+                connect(ip)
+            }
+        }
+    }
+
+    private fun connect (address: InetAddress) {
+        launch {
+            async(Dispatchers.IO) {
+                try {
+                    val socketAddress = InetSocketAddress(address, 8878)
+                    val socket = Socket();
+                    socket.connect(socketAddress, 100);
+                    socket.soTimeout = 100;
+                    var byteArraySend = InetAddress.getByName(getLocalIP()).address
+                    byteArraySend += android.os.Build.MODEL.encodeToByteArray()
+                    socket.getOutputStream().write(byteArraySend)
+                    val byteArrayReceive = ByteArray(socket.receiveBufferSize)
+                    socket.getInputStream().read(byteArrayReceive, 0, socket.receiveBufferSize)
+                    //Log.i("TCP", byteArrayReceive.toHexString(bytesRead))
+                    socket.close()
+
+                    val intent = Intent(applicationContext, MixSelectActivity::class.java)
+                    intent.putExtra(EXTRA_RECEIVE_PORT, byteArrayReceive[0])
+                    intent.putExtra(EXTRA_SEND_PORT, byteArrayReceive[1])
+                    intent.putExtra(EXTRA_NUM_CHANNELS, byteArrayReceive[2])
+                    intent.putExtra(EXTRA_NUM_MIXES, byteArrayReceive[(3)])
+                    startActivity(intent)
+                } catch (e: SocketTimeoutException) {
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(applicationContext, "No response...", Toast.LENGTH_SHORT).show()
+                        if (devices.containsValue(address)) {
+                            val name: String = devices.filterValues { it == address }.keys.first()
+                            devices.remove(name, address)
+                            adapter.removeDevice(name)
+                        }
+                    }
+                }
+
             }
         }
     }

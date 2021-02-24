@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 		AsyncTask.execute(this::OpenOSCPortOut);
 
 		mixMeter = findViewById(R.id.mixMeter);
+		mixMeter.setValue(0);
 
 		udpListenerThread = new Thread(new ClientListen());
 	}
@@ -142,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
 		recyclerView.setAdapter(adapter);
 
 		SendOSCGetMix(currentMix);
-
 		udpListenerThread.start();
 
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
@@ -289,12 +289,12 @@ public class MainActivity extends AppCompatActivity {
 				try {
 					byte[] recvBuf = new byte[16];
 					if (socket == null) {
-						socket = new DatagramSocket(8874);
+						socket = new DatagramSocket(8879);
 						socket.setSoTimeout(100);
 						socket.setBroadcast(true);
 					}
 					if (socket.isClosed()) {
-						socket = new DatagramSocket(8874);
+						socket = new DatagramSocket(8879);
 						socket.setSoTimeout(100);
 						socket.setBroadcast(true);
 					}
@@ -312,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
 					runUDP = false;
 				}
 			}
+			if (socket != null) socket.close();
 		}
 	}
 

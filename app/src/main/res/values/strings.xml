@@ -7,6 +7,6 @@
 	<string name="mix_5">MIX 5</string>
 	<string name="mix_6">MIX 6</string>
 	<string name="hint_ip">192.168.1.2</string>
-	<string name="start">START</string>
-	<string name="greeting_msg">Hello there!</string>
+	<string name="start">CONNECT</string>
+	<string name="greeting_msg">TouchFaders</string>
 </resources>
