@@ -91,6 +91,17 @@ public class MainActivity extends AppCompatActivity {
 						});
 					}
 				}
+				if (message.getAddress().contains("/patch")) {
+					String[] segments = message.getAddress().split("/");
+					int channelIndex = Integer.parseInt(segments[2].replaceAll("\\D+", "")) - 1;
+					if (0 <= channelIndex && channelIndex < adapter.getItemCount()) {
+						Handler handler = new Handler(getMainLooper());
+						adapter.setChannelPatchIn(channelIndex, (String) message.getArguments().get(0));
+						handler.post(() -> {
+							adapter.notifyDataSetChanged();
+						});
+					}
+				}
 			}
 			if (packet instanceof OSCBundle) {
 				OSCBundle bundle = (OSCBundle) packet;
