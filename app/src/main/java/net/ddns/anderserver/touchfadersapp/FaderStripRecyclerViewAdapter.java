@@ -6,6 +6,7 @@ import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.os.Debug;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.DisplayCutout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,8 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
 
     private final int currentMix;
     private final ArrayList<Integer> faderLevels = new ArrayList<>();
+    private final ArrayList<String> channelNames = new ArrayList<>();
+    private final ArrayList<String> channelPatchIn = new ArrayList<>();
     private FaderValueChangedListener faderValueChangedListener;
 
     int[] colourArray;
@@ -42,6 +45,8 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
         TypedArray array = context.obtainStyledAttributes(R.style.Widget_Theme_TouchFaders_BoxedVerticalSeekBar, new int[]{R.attr.startValue});
         for (int channel = 0; channel < numChannels; channel++ ){
             faderLevels.add(array.getInt(0, 623));
+            channelNames.add("CH " + (channel + 1));
+            channelPatchIn.add(String.format("IN %02d", channel + 1));
         }
         array.recycle();
         colourArray = context.getResources().getIntArray(R.array.mix_colours);
@@ -68,6 +73,23 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
         }
         String number = String.valueOf((position + 1));
         holder.channelNumber.setText(number);
+        holder.channelPatch.setText(channelPatchIn.get(position));
+        holder.channelName.setText(channelNames.get(position));
+
+        // Set channel name sizing, per channel name length
+        if (holder.channelName.getText().length() <= 3) {
+            holder.channelName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        }
+        if (holder.channelName.getText().length() == 4) {
+            holder.channelName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        }
+        if (holder.channelName.getText().length() == 5) {
+            holder.channelName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        }
+        if (holder.channelName.getText().length() == 6) {
+            holder.channelName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+        }
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
             if (position == faderLevels.size() - 1) {
@@ -90,6 +112,8 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
         int position;
         BoxedVertical fader;
         TextView channelNumber;
+        TextView channelPatch;
+        TextView channelName;
 
         FaderStripViewHolder(View itemView) {
             super(itemView);
@@ -99,6 +123,8 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
                 faderValueChangedListener.onValueChanged(boxedPoints.getRootView(), position, boxedPoints, points);
             });
             channelNumber = itemView.findViewById(R.id.channelNumber);
+            channelPatch = itemView.findViewById(R.id.channelPatch);
+            channelName = itemView.findViewById(R.id.channelName);
         }
 
         @Override
@@ -109,6 +135,14 @@ public class FaderStripRecyclerViewAdapter extends RecyclerView.Adapter<FaderStr
 
     void setFaderLevel (int index, int level) {
         faderLevels.set(index, level);
+    }
+
+    void setChannelPatchIn (int index, String patchIn) {
+        channelPatchIn.set(index, patchIn);
+    }
+
+    void setChannelName (int index, String name) {
+        channelNames.set(index, name);
     }
 
     void setValuesChangeListener (FaderValueChangedListener listener) {

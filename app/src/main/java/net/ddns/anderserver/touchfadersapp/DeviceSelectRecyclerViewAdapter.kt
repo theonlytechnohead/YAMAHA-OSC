@@ -18,6 +18,7 @@ class DeviceSelectRecyclerViewAdapter internal constructor(context: Context?, pr
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.deviceSelectButton.text = deviceNames[position]
+        holder.deviceSelectButton.isEnabled = true
         holder.devicePosition = position
     }
 
@@ -51,7 +52,10 @@ class DeviceSelectRecyclerViewAdapter internal constructor(context: Context?, pr
         init {
             //mixTextView = itemView.findViewById(R.id.mix_select_text);
             //mixTextView.setOnClickListener(this);
-            deviceSelectButton.setOnClickListener { view: View? -> onItemClick(view, devicePosition) }
+            deviceSelectButton.setOnClickListener { view: View? ->
+                deviceSelectButton.isEnabled = false
+                onItemClick(view, devicePosition)
+            }
         }
     }
 

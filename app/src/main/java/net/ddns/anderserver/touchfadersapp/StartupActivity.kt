@@ -123,6 +123,7 @@ class StartupActivity : AppCompatActivity(), CoroutineScope {
         launch(Dispatchers.IO) {
             checkNetwork()
         }
+        adapter.notifyDataSetChanged()
     }
 
     override fun onPause() {

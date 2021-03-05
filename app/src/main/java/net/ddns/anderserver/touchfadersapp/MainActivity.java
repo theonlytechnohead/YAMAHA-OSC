@@ -80,6 +80,17 @@ public class MainActivity extends AppCompatActivity {
 						handler.post(() -> adapter.notifyDataSetChanged());
 					}
 				}
+				if (message.getAddress().contains("/label")) {
+					String[] segments = message.getAddress().split("/");
+					int channelIndex = Integer.parseInt(segments[2].replaceAll("\\D+", "")) - 1;
+					if (0 <= channelIndex && channelIndex < adapter.getItemCount()) {
+						Handler handler = new Handler(getMainLooper());
+						adapter.setChannelName(channelIndex, (String) message.getArguments().get(0));
+						handler.post(() -> {
+							adapter.notifyDataSetChanged();
+						});
+					}
+				}
 			}
 			if (packet instanceof OSCBundle) {
 				OSCBundle bundle = (OSCBundle) packet;
@@ -147,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
 		if (udpListenerThread.getState() != Thread.State.NEW) {
 			udpListenerThread.start();
 		}
-		SendOSCGetMix(currentMix);
 
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
 			frameLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -169,6 +179,17 @@ public class MainActivity extends AppCompatActivity {
 				//Log.i("CUTOUT", "safeLeft: " + cutout.getSafeInsetLeft() + "  safeRight: " + cutout.getSafeInsetRight());
 			});
 		}
+		AsyncTask.execute(() -> {
+			boolean ready = false;
+			while (!ready) {
+				if (oscPortIn != null && oscPortOut != null) {
+					ready = oscPortIn.isListening() && oscPortOut.isConnected();
+				} else {
+					ready = false;
+				}
+			}
+			SendOSCGetMix(currentMix);
+		});
 	}
 
 	@Override
@@ -226,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
 	private void OpenOSCPortOut () {
 		try {
 			oscPortOut = new OSCPortOut(new InetSocketAddress(InetAddress.getByName(ipAddress), 8000 + sendPort));
+			oscPortOut.connect();
 		} catch (Exception e) {
 			Handler handler = new Handler(Looper.getMainLooper());
 			handler.post(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show());
